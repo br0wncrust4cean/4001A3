@@ -2,6 +2,7 @@
 #include <pthread.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 
 typedef struct {
     char accountNo[5];
@@ -86,15 +87,17 @@ void server(){
 }
 
 void ATM(){
-	Message message;
+	Message toSend;
+	infoTuple newInfo;
+	newInfo.funds = 0.00;
 	while(true) {
 		printf("Please input your account number");
-		scanf("%s", message.info.accountNo);
-		printf("THIS IS NOW THE ACCOUNT NUMBER: %s", message.info.accountNo);
+		scanf("%s", newInfo.accountNo);
+		printf("THIS IS NOW THE ACCOUNT NUMBER: %s", newInfo.accountNo);
 		printf("Please input your PIN");
-		scanf("%s", message.info.PIN);
-		printf("THIS IS NOW YOUR PIN: %s", message.info.PIN)
-		
+		scanf("%s", newinfo.PIN);
+		printf("THIS IS NOW YOUR PIN: %s", newInfo.info.PIN);
+		strcpy(toSend.message, "PIN");
 		
 	}
 	
