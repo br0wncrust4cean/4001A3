@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-typedef struct infoTuple{
+typedef struct {
     char accountNo[5];
     char PIN[3];
     float funds;
@@ -15,7 +15,7 @@ struct node
     struct node *next;
 }*head;
  
-typedef struct editorMessage{
+typedef struct {
     char message[9];
     infoTuple toUpdate;
 }editorMessage;
@@ -51,86 +51,6 @@ void add(infoTuple num )
     head=temp;
     }
 }
-
-/*
-void addafter(int num, int loc)
-{
-    int i;
-    struct node *temp,*left,*right;
-    right=head;
-    for(i=1;i<loc;i++)
-    {
-    left=right;
-    right=right->next;
-    }
-    temp=(struct node *)malloc(sizeof(struct node));
-    temp->data=num;
-    left->next=temp;
-    left=temp;
-    left->next=right;
-    return;
-}*/
- 
- 
- 
-/*void insert(infoTuple num)
-{
-    int c=0;
-    struct node *temp;
-    temp=head;
-    if(temp==NULL)
-    {
-    add(num);
-    }
-    else
-    {
-    while(temp!=NULL)
-    {
-        if(temp->data<num)
-        c++;
-        temp=temp->next;
-    }
-    if(c==0)
-        add(num);
-    else if(c<count())
-        addafter(num,++c);
-    else
-        append(num);
-    }
-}*/
- 
- 
-/*
-int delete(infoTuple num)
-{
-    struct node *temp, *prev;
-    temp=head;
-    while(temp!=NULL)
-    {
-    if(temp->data==num)
-    {
-        if(temp==head)
-        {
-        head=temp->next;
-        free(temp);
-        return 1;
-        }
-        else
-        {
-        prev->next=temp->next;
-        free(temp);
-        return 1;
-        }
-    }
-    else
-    {
-        prev=temp;
-        temp= temp->next;
-    }
-    }
-    return 0;
-}*/
- 
  
 void  display(struct node *r)
 {
