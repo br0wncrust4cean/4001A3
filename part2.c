@@ -15,6 +15,11 @@ struct node
     struct node *next;
 }*head;
  
+typedef struct editorMessage{
+    char message[9];
+    infoTuple toUpdate;
+}editorMessage;
+
 void append(infoTuple num)
 {
     struct node *temp,*right;
@@ -68,7 +73,7 @@ void addafter(int num, int loc)
  
  
  
-void insert(infoTuple num)
+/*void insert(infoTuple num)
 {
     int c=0;
     struct node *temp;
@@ -92,10 +97,10 @@ void insert(infoTuple num)
     else
         append(num);
     }
-}
+}*/
  
  
- 
+/*
 int delete(infoTuple num)
 {
     struct node *temp, *prev;
@@ -124,7 +129,7 @@ int delete(infoTuple num)
     }
     }
     return 0;
-}
+}*/
  
  
 void  display(struct node *r)
@@ -136,7 +141,7 @@ void  display(struct node *r)
     }
     while(r!=NULL)
     {
-    printf("%d ",r->data);
+    printf("%0.2f ",r->data.funds);
     r=r->next;
     }
     printf("\n");
@@ -173,11 +178,18 @@ void init(){
     infoTuple secondRow = {.accountNo = "00011", .PIN = "323", .funds = 10089.97 };
     infoTuple thirdRow = {.accountNo = "00117", .PIN = "259", .funds = 112.00 };
     head = NULL;
-    insert(firstRow);
-    insert(secondRow);
-    insert(thirdRow);
+    add(firstRow);
+    add(secondRow);
+    add(thirdRow);
 }
 
 int main (void){
     init();
+
+    pthread_t userThread;
+    pthread_t serverThread;
+    pthread_t editorThread;
+
+    display(head);
+    
 }
