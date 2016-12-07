@@ -86,6 +86,14 @@ void server(){
 }
 
 void ATM(){
+	infoTuple info;
+	while(true) {
+		printf("Please input your account number");
+		scanf("%s", info.accountNo );
+		printf("%s" info.accouNo);
+	}
+	
+	
 
 }
 
@@ -111,5 +119,6 @@ int main (void){
     pthread_t editorThread;
 
     display(head);
+	ATM();
     
 }
