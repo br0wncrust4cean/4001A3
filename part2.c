@@ -17,8 +17,8 @@ struct node
  
 typedef struct {
     char message[9];
-    infoTuple toUpdate;
-}editorMessage;
+    infoTuple info;
+}Message;
 
 void append(infoTuple num)
 {
@@ -86,11 +86,16 @@ void server(){
 }
 
 void ATM(){
-	infoTuple info;
+	Message message;
 	while(true) {
 		printf("Please input your account number");
-		scanf("%s", info.accountNo);
-		printf("%s", info.accountNo);
+		scanf("%s", message.info.accountNo);
+		printf("THIS IS NOW THE ACCOUNT NUMBER: %s", message.info.accountNo);
+		printf("Please input your PIN");
+		scanf("%s", message.info.PIN);
+		printf("THIS IS NOW YOUR PIN: %s", message.info.PIN)
+		
+		
 	}
 	
 	
