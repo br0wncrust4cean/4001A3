@@ -90,11 +90,11 @@ void ATM(){
 	Message toSend;
 	while(true) {
 		printf("Please input your account number: ");
-		scanf("%s", message.info.accountNo);
-		printf("\nTHIS IS NOW THE ACCOUNT NUMBER: %s", message.info.accountNo);
+		scanf("%s", toSend.info.accountNo);
+		printf("\nTHIS IS NOW THE ACCOUNT NUMBER: %s", toSend.info.accountNo);
 		printf("\nPlease input your PIN: ");
-		scanf("%s", message.info.PIN);
-		printf("\n THIS IS NOW YOUR PIN: %s", message.info.PIN);
+		scanf("%s", toSend.info.PIN);
+		printf("\n THIS IS NOW YOUR PIN: %s", toSend.info.PIN);
 		strcpy(toSend.message, "PIN");
 		
 		
