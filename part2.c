@@ -96,14 +96,20 @@ void server(){
 	char* message = receivedMessage.message;
 
 	if (strcmp(message, updateMessage) == 0){
-		dbRow = receivedMessage.info;
 		char info[100]; //arbitrary string
-		sprintf(info, "%5s,%3s,%0.2f", dbRow.accountNo, dbRow.PIN, dbRow.funds);
+		sprintf(info, "%5s,%3s,%0.2f", receivedMessage.info.accountNo, receivedMessage.info.PIN, receivedMessage.info.funds);
 		FILE* file = fopen("DataBase", "a");
 		fputs(info, file);
 		fclose(file);
 	} else if (strcmp(message, requestFunds) == 0) {
+		FILE* file = fopen("DataBase", "r");
+		int numOfLines = 0;
+		char line[100];
+		while (fgets(line, sizeof(line), file)){
+			numOfLines++;
+		}
 
+		
 	} else if (strcmp(message, withdrawMsg) == 0) {
 
 	}
