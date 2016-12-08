@@ -93,27 +93,31 @@ void ATM(){
 	Message toSend, receivedMessage;
 	bool received = true;
 	int incorrect = 0;
+	bool okay;
 	while(true) {
 		while(promptForAccount(&toSend) != 1); 
-		while(promptForPIN(&toSend) != 1); 
-		strcpy(toSend.message, "PIN");
-		printf("\nTHIS IS NOW THE ACCOUNT NUMBER: %s\n \nTHIS IS NOW THE PIN %s\n THIS IS NOW YOUR MESSAGE: %s \n", toSend.info.accountNo,toSend.info.PIN,toSend.message);
-		sendMessage(toSend);
-		while(received == false) {}
-		strcpy(receivedMessage.message, "OK");
-		if(receivedMessage.message[0] == 'O' && receivedMessage.message[1] == 'K') {
-			printf("HALALOOOOOOOYA, topkeyk");
-			incorrect = 0;
-			
-		} else {
-			incorrect++;
-			if(incorrect == 3) {
-				printf("Account Blocked");
-				strcpy(toSend.message, "BLOCKED");
-				sendMessage(toSend);
-				
+		do {
+			while(promptForPIN(&toSend) != 1); 
+			strcpy(toSend.message, "PIN");
+			printf("\nTHIS IS NOW THE ACCOUNT NUMBER: %s\nTHIS IS NOW THE PIN %s\n THIS IS NOW YOUR MESSAGE: %s \n", toSend.info.accountNo,toSend.info.PIN,toSend.message);
+			sendMessage(toSend);
+			while(received == false) {}
+			strcpy(receivedMessage.message, "OZ"); //Obviously fix, hardcoded server message
+			okay = receivedMessage.message[0] == 'O' && receivedMessage.message[1] == 'K''
+			if(okay = true) {
+				printf("HALALOOOOOOOYA, topkeyk");
+				incorrect = 0;	
+			} else {
+				incorrect++;
+				if(incorrect == 3) {
+					printf("Account Blocked");
+					strcpy(toSend.message, "BLOCKED");
+					sendMessage(toSend);
+					
+				}
 			}
-		}
+		} while(okay == false && incorrect != 3)
+	
 		
 	}
 	
@@ -125,9 +129,9 @@ int promptForPIN(Message* toSend) {
 	bool valid = true;
 	valid = true;
 	printf("\nPlease input a valid PIN (3 digits) : ");
-	check = scanf("%s", toSend->info.accountNo);
+	check = scanf("%s", toSend->info.PIN);
 	printf("\nTHIS IS NOW THE PIN %s",toSend->info.PIN);
-	char *p = toSend->info.accountNo;
+	char *p = toSend->info.PIN;
 	size = 0;
 	for(p; *p != '\0'; p++ ) {
 		if(!isdigit(*p)) {
