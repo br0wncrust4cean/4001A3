@@ -92,9 +92,10 @@ void sendMessage(Message message) {
 void ATM(){
 	Message toSend, receivedMessage;
 	bool received = true;
+	char continue = 'z';
 	int incorrect = 0;
 	bool okay;
-	while(true) {
+	while(continue != 'x' && continue != 'X') {
 		while(promptForAccount(&toSend) != 1); 
 		do {
 			while(promptForPIN(&toSend) != 1); 
@@ -110,7 +111,7 @@ void ATM(){
 			} else {
 				incorrect++;
 				if(incorrect == 3) {
-					printf("Account Blocked");
+					printf("Account Blocked \n");
 					strcpy(toSend.message, "BLOCKED");
 					sendMessage(toSend);
 					
@@ -118,7 +119,8 @@ void ATM(){
 			}
 		} while(okay == false && incorrect != 3);
 	
-		
+		printf("Enter X to quit or any another key to continue");
+		scanf("%s", &continue)
 	}
 }
 int promptForPIN(Message* toSend) {
@@ -127,7 +129,6 @@ int promptForPIN(Message* toSend) {
 	valid = true;
 	printf("\nPlease input a valid PIN (3 digits) : ");
 	check = scanf("%s", toSend->info.PIN);
-	printf("\nTHIS IS NOW THE PIN %s",toSend->info.PIN);
 	char *p = toSend->info.PIN;
 	size = 0;
 	for(p; *p != '\0'; p++ ) {
@@ -147,7 +148,6 @@ int promptForAccount(Message* toSend) {
 	bool valid = true;
 	printf("Please input a valid account number (5 digits) : ");
 	check = scanf("%s", toSend->info.accountNo);
-	printf("\nTHIS IS NOW THE ACCOUNT NUMBER: %s\n", toSend->info.accountNo);
 	char *p = toSend->info.accountNo;
 	size = 0;
 	for(p; *p != '\0'; p++ ) {
