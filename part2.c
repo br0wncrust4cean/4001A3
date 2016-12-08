@@ -2,7 +2,8 @@
 #include <pthread.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include<string.h>
+#include <string.h>
+#include <ctype.h>
 
 typedef struct {
     char accountNo[5];
@@ -84,7 +85,28 @@ int count()
 }
 
 void server(){
+	Message receivedMessage;
+	infoTuple dbRow;
 
+	//probably want to make these constants
+	char* updateMessage = "UpdateDB";
+	char* requestFunds = "Request Funds";
+	char* withdrawMsg = "Withdraw";
+
+	char* message = receivedMessage.message;
+
+	if (strcmp(message, updateMessage) == 0){
+		dbRow = receivedMessage.info;
+		char info[100]; //arbitrary string
+		sprintf(info, "%5s,%3s,%0.2f", dbRow.accountNo, dbRow.PIN, dbRow.funds);
+		FILE* file = fopen("DataBase", "a");
+		fputs(info, file);
+		fclose(file);
+	} else if (strcmp(message, requestFunds) == 0) {
+
+	} else if (strcmp(message, withdrawMsg) == 0) {
+
+	}
 }
 
 void sendMessage(Message message) {
