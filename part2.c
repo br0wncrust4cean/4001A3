@@ -92,17 +92,32 @@ void ATM(){
 	bool valid = true;
 	while(true) {
 		do {
-			printf("Please input your account number: ");
+			printf("Please input your account number (5 digits) : ");
 			check = scanf("%s", toSend.info.accountNo);
 			size = sizeof(toSend.info.accountNo)/sizeof(char);
-			printf("\nTHIS IS NOW THE ACCOUNT NUMBER: %s, size: %d", toSend.info.accountNo,size);
+			printf("\nTHIS IS NOW THE ACCOUNT NUMBER: %s, size: %d\n", toSend.info.accountNo,size);
 			char *p = toSend.info.accountNo;
 			for(p; *p != '\0'; p++ ) {
 				if(!isdigit(*p)) {
 					valid = false;
 				}
 			}
-		} while(check != 1 || size != 5 || valid == true); /*
+		} while(check != 1 || size != 5 || valid == false); 
+		do {
+			valid = true;
+			printf("\nPlease input your PIN: ");
+			check = scanf("%s", toSend.info.accountNo);
+			size = sizeof(toSend.info.accountNo)/sizeof(char);
+			printf("\nTHIS IS NOW THE PIN %s, size: %d", toSend.info.PIN, size);
+			char *p = toSend.info.accountNo;
+			for(p; *p != '\0'; p++ ) {
+				if(!isdigit(*p)) {
+					valid = false;
+				}
+			}
+		} while(check != 1 || size != 3 || valid == false); /*
+		
+		/*
 		check = printf("\nPlease input your PIN: ");
 		check = scanf("%s", toSend.info.PIN);
 		printf("\n THIS IS NOW YOUR PIN: %s, DIGITS: %d", toSend.info.PIN, check);
