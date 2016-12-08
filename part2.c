@@ -90,9 +90,9 @@ void sendMessage(Message message) {
 	
 }
 void ATM(){
-	Message toSend;
+	Message toSend, receivedMessage;
 	bool received = true;
-	incorrect = 0;
+	int incorrect = 0;
 	while(true) {
 		while(promptForAccount(&toSend) != 1); 
 		while(promptForPIN(&toSend) != 1); 
@@ -100,6 +100,7 @@ void ATM(){
 		printf("\nTHIS IS NOW THE ACCOUNT NUMBER: %s\n \nTHIS IS NOW THE PIN %s\n THIS IS NOW YOUR MESSAGE: %s \n", toSend.info.accountNo,toSend.info.PIN,toSend.message);
 		sendMessage(toSend);
 		while(received == false) {}
+		strcpy(receivedMessage.message, "OK");
 		if(receivedMessage.message[0] == 'O' && receivedMessage.message[1] == 'K') {
 			printf("HALALOOOOOOOYA, topkeyk");
 			incorrect = 0;
