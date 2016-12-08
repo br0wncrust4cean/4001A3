@@ -86,30 +86,19 @@ void server(){
 
 }
 
+void sendMessage(Message message) {
+	
+}
 void ATM(){
 	Message toSend;
-	int check, size, i;
-	bool valid;
+	bool received = true;
+	incorrect = 0;
 	while(true) {
+		while(promptForAccount(&toSend) != 1); 
 		do {
 			valid = true;
-			printf("Please input your account number (5 digits) : ");
+			printf("\nPlease input a valid PIN (3 digits) : ");
 			check = scanf("%s", toSend.info.accountNo);
-			printf("\nTHIS IS NOW THE ACCOUNT NUMBER: %s\n", toSend.info.accountNo);
-			char *p = toSend.info.accountNo;
-			size = 0;
-			for(p; *p != '\0'; p++ ) {
-				if(!isdigit(*p)) {
-					valid = false;
-				}
-				size++;
-			}
-		} while(check != 1 || size != 5 || valid == false); 
-		do {
-			valid = true;
-			printf("\nPlease input your PIN (3 digits) : ");
-			check = scanf("%s", toSend.info.accountNo);
-			size = sizeof(toSend.info.accountNo)/sizeof(char);
 			printf("\nTHIS IS NOW THE PIN %s",toSend.info.PIN);
 			char *p = toSend.info.accountNo;
 			size = 0;
@@ -119,16 +108,24 @@ void ATM(){
 				}
 				size++;
 			}
-		} while(check != 1 || size != 3 || valid == false); /*
-		
-		/*
-		check = printf("\nPlease input your PIN: ");
-		check = scanf("%s", toSend.info.PIN);
-		printf("\n THIS IS NOW YOUR PIN: %s, DIGITS: %d", toSend.info.PIN, check);
+		} while(check != 1 || size != 3 || valid == false); 
 		strcpy(toSend.message, "PIN");
-		printf("\n THIS IS NOW YOUR MESSAGE: %s \n", toSend.message); */
-		
-		
+		printf("\nTHIS IS NOW THE ACCOUNT NUMBER: %s\n \nTHIS IS NOW THE PIN %s\n THIS IS NOW YOUR MESSAGE: %s \n", toSend.info.accountNo,toSend.info.PIN,toSend.message");
+		sendMessage(toSend);
+		while(received == false) {}
+		if(receivedMessage.message[0] == 'O' && receivedMessage.message[1] == 'K') {
+			printf("HALALOOOOOOOYA, topkeyk");
+			incorrect = 0;
+			
+		} else {
+			incorrect++;
+			if(incorrect == 3) {
+				printf("Account Blocked");
+				strcpy(toSend.message, "BLOCKED");
+				sendMessage(toSend);
+				
+			}
+		}
 		
 	}
 	
@@ -136,6 +133,26 @@ void ATM(){
 
 }
 
+int promptForAccount(Message* toSend) {
+	int check, size, incorrect;
+	bool valid = true;
+	printf("Please input a valid account number (5 digits) : ");
+	check = scanf("%s", toSend->info.accountNo);
+	printf("\nTHIS IS NOW THE ACCOUNT NUMBER: %s\n", toSend->info.accountNo);
+	char *p = toSend->info.accountNo;
+	size = 0;
+	for(p; *p != '\0'; p++ ) {
+		if(!isdigit(*p)) {
+			valid = false;
+		}
+		size++;
+	}
+	if(check == 1 && size == 5 && valid == true) {
+		return 1;
+	}
+	return 0;
+	
+}
 void editor(){
 
 }
