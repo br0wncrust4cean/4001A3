@@ -103,7 +103,7 @@ void ATM(){
 			sendMessage(toSend);
 			while(received == false) {}
 			strcpy(receivedMessage.message, "OZ"); //Obviously fix, hardcoded server message
-			okay = receivedMessage.message[0] == 'O' && receivedMessage.message[1] == 'K''
+			okay = receivedMessage.message[0] == 'O' && receivedMessage.message[1] == 'K';
 			if(okay = true) {
 				printf("HALALOOOOOOOYA, topkeyk");
 				incorrect = 0;	
