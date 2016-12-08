@@ -89,9 +89,10 @@ void server(){
 	infoTuple dbRow;
 
 	//probably want to make these constants
-	char* updateMessage = "UpdateDB";
-	char* requestFunds = "Request Funds";
-	char* withdrawMsg = "Withdraw";
+	char* updateMessage = "UPDATE DB";
+	char* requestFunds = "FUNDS";
+	char* withdrawMsg = "WITH";
+	char* pinMsg = "PIN";
 
 	char* message = receivedMessage.message;
 
@@ -104,11 +105,44 @@ void server(){
 	} else if (strcmp(message, requestFunds) == 0) {
 		FILE* file = fopen("DataBase", "r");
 		int numOfLines = 0;
+		int colCounter = 0;
+		const char s = ','; 
 		char line[100];
 		while (fgets(line, sizeof(line), file)){
 			numOfLines++;
 		}
+		fclose(file);
+		
+		file = fopen("DataBase", "r");
+		char* getValues = malloc(sizeof(char)*10); //idk if anyone is going to be keeping a billion bucks at the bank
+		char* front = getValues;
+		int i;
+		while(fgets(line, sizeof(line), file)){
+			char *p = line;
+			while(*p){
+				if(*p == ','){
+					if(colCounter == 0){
+						getValues = front;
+						for(i = 0; i < 5; i++){
+							dbRow.accountNo[i] = getValues[i];
+						}
+					} else if (colCounter == 1) {
+						getValues = front;
+						for(i = 0; i < 3; i++){
+							dbRow.PIN[i] = getValues[i];
+						}
+					} 
 
+					colCounter++;
+					getValues = front;
+				} else if (isdigit(*p)) {
+					*getValues = *p;
+					getValues++;
+				} else {
+					dbRow.funds = atof(getValues);
+				}
+			}
+		}
 		
 	} else if (strcmp(message, withdrawMsg) == 0) {
 
@@ -251,7 +285,7 @@ void editor(){
 	while(true) {
 		while(promptForAccount(&toSend) != 1);
 		while(promptForPIN(&toSend) != 1);
-		while(promptForFundsw(&toSend) != 1);
+		while(promptForFunds(&toSend) != 1);
 		strcpy(toSend.message, "UPDATE DB");
 		sendMessage(toSend);
 	}
@@ -272,5 +306,8 @@ int main (void){
     pthread_t userThread;
     pthread_t serverThread;
     pthread_t editorThread;
-    ATM();
+    //ATM();
+
+	int test = 00001;
+	printf("%d", test);
 }
