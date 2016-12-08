@@ -19,6 +19,7 @@ struct node
 typedef struct {
     char message[9];
     infoTuple info;
+	float funds;
 }Message;
 
 void append(infoTuple num)
@@ -95,6 +96,7 @@ void ATM(){
 	char cont = 'z';
 	int incorrect = 0;
 	int choice;
+	float withdraw;
 	bool okay;
 	while(cont != 'x' && cont != 'X') {
 		while(promptForAccount(&toSend) != 1); 
@@ -107,10 +109,28 @@ void ATM(){
 			okay = receivedMessage.message[0] == 'O' && receivedMessage.message[1] == 'K';
 			if(okay == true) {
 				incorrect = 0;
-				while(choice = promptForFunds() == 0){}
+				while(choice = promptForFundsOrWithdraw() == 0){}
 				if(choice == 1) {
+					strcpy(toSend.message, "FUNDS");
+					sendMessage(toSend);
+					while(received == false) {}
+					receivedMessage.funds = 100.00;
+					printf("Funds available: %.2f", receivedMessage.funds);
 				} else {
+					while(toSend.funds = promptForWithdraw() == -1){}
+					strcpy(toSend.message, "WITH");
+					sendMessage(toSend);
+					while(received == false) {}
+					strcpy(receivedMessage.message, "N");
+					if(receivedMessage.message[0] = 'N') {
+						printf("Not enough funds");
+						while(toSend.funds = promptForWithdraw() == -1){}
+					} else {
+						printf("Enough funds available");
+					}
 				}
+				
+				
 			} else {
 				incorrect++;
 				if(incorrect == 3) {
@@ -126,12 +146,21 @@ void ATM(){
 		scanf("%s", &cont);
 	}
 }
-int promptForFunds() {
-	printf("Press 1 to display funds, 2 to withdraw");
-	int check, size, incorrect, choice;
-	bool valid = true;
-	valid = true;
-	check = scanf("%d", &choice);
+
+
+float promptForWithdrawAmount() {
+	float withdraw;
+	scanf("%d", &choice);
+	printf("Enter the amount of money to withdaw: ");
+	scanf("%d", &withdraw);
+	if(withdraw > -1) return withdraw;
+	else return -1;
+}
+
+int promptForFundsOrWithdraw() {
+	printf("Press 1 to display funds or 2 to withdraw funds: ");
+	int choice;
+	scanf("%d", &choice);
 	if(choice == 1) return 1;
 	else if(choice == 2) return 2;
 	else return 0;
