@@ -95,13 +95,14 @@ void ATM(){
 			valid = true;
 			printf("Please input your account number (5 digits) : ");
 			check = scanf("%s", toSend.info.accountNo);
-			size = sizeof(toSend.info.accountNo)/sizeof(char);
-			printf("\nTHIS IS NOW THE ACCOUNT NUMBER: %s, size: %d\n", toSend.info.accountNo,size);
+			printf("\nTHIS IS NOW THE ACCOUNT NUMBER: %s\n", toSend.info.accountNo);
 			char *p = toSend.info.accountNo;
+			size = 0;
 			for(p; *p != '\0'; p++ ) {
 				if(!isdigit(*p)) {
 					valid = false;
 				}
+				size++;
 			}
 		} while(check != 1 || size != 5 || valid == false); 
 		do {
@@ -109,12 +110,14 @@ void ATM(){
 			printf("\nPlease input your PIN (3 digits) : ");
 			check = scanf("%s", toSend.info.accountNo);
 			size = sizeof(toSend.info.accountNo)/sizeof(char);
-			printf("\nTHIS IS NOW THE PIN %s, size: %d", toSend.info.PIN, size);
+			printf("\nTHIS IS NOW THE PIN %s",toSend.info.PIN);
 			char *p = toSend.info.accountNo;
+			size = 0;
 			for(p; *p != '\0'; p++ ) {
 				if(!isdigit(*p)) {
 					valid = false;
 				}
+				size++;
 			}
 		} while(check != 1 || size != 3 || valid == false); /*
 		
