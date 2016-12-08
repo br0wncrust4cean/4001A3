@@ -90,6 +90,64 @@ void server(){
 void sendMessage(Message message) {
 	
 }
+
+
+
+float promptForWithdrawAmount() {
+	float withdraw;
+	printf("Enter the amount of money to withdaw: ");
+	scanf("%d", &withdraw);
+	if(withdraw > -1) return withdraw;
+	else return -1;
+}
+
+int promptForFundsOrWithdraw() {
+	printf("Press 1 to display funds or 2 to withdraw funds: ");
+	int choice;
+	scanf("%d", &choice);
+	if(choice == 1) return 1;
+	else if(choice == 2) return 2;
+	else return 0;
+}
+int promptForPIN(Message* toSend) {
+	int check, size, incorrect;
+	bool valid = true;
+	valid = true;
+	printf("\nPlease input a valid PIN (3 digits) : ");
+	check = scanf("%s", toSend->info.PIN);
+	char *p = toSend->info.PIN;
+	size = 0;
+	for(p; *p != '\0'; p++ ) {
+		if(!isdigit(*p)) {
+			valid = false;
+		}
+		size++;
+	}
+	if(check == 1 && size == 3 && valid == true) {
+		return 1;
+	}
+	return 0;
+
+}
+int promptForAccount(Message* toSend) {
+	int check, size, incorrect;
+	bool valid = true;
+	printf("Please input a valid account number (5 digits) : ");
+	check = scanf("%s", toSend->info.accountNo);
+	char *p = toSend->info.accountNo;
+	size = 0;
+	for(p; *p != '\0'; p++ ) {
+		if(!isdigit(*p)) {
+			valid = false;
+		}
+		size++;
+	}
+	if(check == 1 && size == 5 && valid == true) {
+		return 1;
+	}
+	return 0;
+	
+}
 void ATM(){
 	Message toSend, receivedMessage;
 	bool received = true;
@@ -148,62 +206,6 @@ void ATM(){
 	}
 }
 
-
-float promptForWithdrawAmount() {
-	float withdraw;
-	printf("Enter the amount of money to withdaw: ");
-	scanf("%d", &withdraw);
-	if(withdraw > -1) return withdraw;
-	else return -1;
-}
-
-int promptForFundsOrWithdraw() {
-	printf("Press 1 to display funds or 2 to withdraw funds: ");
-	int choice;
-	scanf("%d", &choice);
-	if(choice == 1) return 1;
-	else if(choice == 2) return 2;
-	else return 0;
-}
-int promptForPIN(Message* toSend) {
-	int check, size, incorrect;
-	bool valid = true;
-	valid = true;
-	printf("\nPlease input a valid PIN (3 digits) : ");
-	check = scanf("%s", toSend->info.PIN);
-	char *p = toSend->info.PIN;
-	size = 0;
-	for(p; *p != '\0'; p++ ) {
-		if(!isdigit(*p)) {
-			valid = false;
-		}
-		size++;
-	}
-	if(check == 1 && size == 3 && valid == true) {
-		return 1;
-	}
-	return 0;
-
-}
-int promptForAccount(Message* toSend) {
-	int check, size, incorrect;
-	bool valid = true;
-	printf("Please input a valid account number (5 digits) : ");
-	check = scanf("%s", toSend->info.accountNo);
-	char *p = toSend->info.accountNo;
-	size = 0;
-	for(p; *p != '\0'; p++ ) {
-		if(!isdigit(*p)) {
-			valid = false;
-		}
-		size++;
-	}
-	if(check == 1 && size == 5 && valid == true) {
-		return 1;
-	}
-	return 0;
-	
-}
 void editor(){
 
 }
