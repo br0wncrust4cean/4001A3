@@ -170,7 +170,7 @@ void ATM(){
 				incorrect = 0;
 				do{
 					choice = promptForFundsOrWithdraw();
-				} while(choice == 0){}
+				} while(choice == 0);
 				if(choice == 1) {
 					printf("WHAAT");
 					strcpy(toSend.message, "FUNDS");
