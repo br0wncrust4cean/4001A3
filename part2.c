@@ -88,16 +88,26 @@ void server(){
 
 void ATM(){
 	Message toSend;
-	int check;
+	int check, size, i;
+	bool valid = true;
 	while(true) {
-		printf("Please input your account number: ");
-		check = scanf("%s", toSend.info.accountNo);
-		printf("\nTHIS IS NOW THE ACCOUNT NUMBER: %s, DIGITS: %d, %d", toSend.info.accountNo, check, sizeof(toSend.info.accountNo)/sizeof(char));
+		do {
+			printf("Please input your account number: ");
+			check = scanf("%s", toSend.info.accountNo);
+			size = sizeof(toSend.info.accountNo)/sizeof(char);
+			printf("\nTHIS IS NOW THE ACCOUNT NUMBER: %s, size: %d", toSend.info.accountNo,size);
+			char *p = toSend.info.accountNo;
+			for(p; *p != '\0'; p++ ) {
+				if(!isdigit(*p)) {
+					valid = false;
+				}
+			}
+		} while(check != 1 || size != 5 || valid == true); /*
 		check = printf("\nPlease input your PIN: ");
 		check = scanf("%s", toSend.info.PIN);
 		printf("\n THIS IS NOW YOUR PIN: %s, DIGITS: %d", toSend.info.PIN, check);
 		strcpy(toSend.message, "PIN");
-		printf("\n THIS IS NOW YOUR MESSAGE: %s", toSend.message);
+		printf("\n THIS IS NOW YOUR MESSAGE: %s \n", toSend.message); */
 		
 		
 		
