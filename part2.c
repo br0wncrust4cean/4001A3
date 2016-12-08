@@ -183,7 +183,7 @@ void ATM(){
 					strcpy(receivedMessage.message, "N");
 					if(receivedMessage.message[0] = 'N') {
 						printf("Not enough funds");
-						while(toSend.funds = promptForWithdraw() == -1){}
+						while(toSend.funds = promptForWithdrawAmount() == -1){}
 					} else {
 						printf("Enough funds available");
 					}
