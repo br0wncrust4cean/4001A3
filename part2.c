@@ -92,10 +92,10 @@ void sendMessage(Message message) {
 void ATM(){
 	Message toSend, receivedMessage;
 	bool received = true;
-	char continue = 'z';
+	char cont = 'z';
 	int incorrect = 0;
 	bool okay;
-	while(continue != 'x' && continue != 'X') {
+	while(cont != 'x' && continue != 'X') {
 		while(promptForAccount(&toSend) != 1); 
 		do {
 			while(promptForPIN(&toSend) != 1); 
@@ -120,7 +120,7 @@ void ATM(){
 		} while(okay == false && incorrect != 3);
 	
 		printf("Enter X to quit or any another key to continue");
-		scanf("%s", &continue)
+		scanf("%s", &cont);
 	}
 }
 int promptForPIN(Message* toSend) {
