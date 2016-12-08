@@ -154,7 +154,7 @@ void ATM(){
 	char cont = 'z';
 	toSend.funds = -1;
 	int incorrect = 0;
-	int choice;
+	int choice = 0;
 	float withdraw;
 	bool okay;
 	while(cont != 'x' && cont != 'X') {
@@ -170,6 +170,7 @@ void ATM(){
 				incorrect = 0;
 				while(choice = promptForFundsOrWithdraw() == 0){}
 				if(choice == 1) {
+					printf("WHAAT");
 					strcpy(toSend.message, "FUNDS");
 					sendMessage(toSend);
 					while(received == false) {}
