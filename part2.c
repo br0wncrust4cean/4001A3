@@ -120,6 +120,14 @@ void sendMessage(Message message) {
 }
 
 
+int promptForFunds(Message* toSend) {
+	int check;
+	printf("Enter the funds for this account: ");
+	check = scanf("%d", &(toSend->funds));
+	if(check == 1) return 1;
+	return -1;
+
+}
 
 float promptForWithdrawAmount() {
 	float withdraw;
@@ -239,7 +247,14 @@ void ATM(){
 }
 
 void editor(){
-
+	Message toSend;
+	while(true) {
+		while(promptForAccount(&toSend) != 1);
+		while(promptForPIN(&toSend) != 1);
+		while(promptForFundsw(&toSend) != 1);
+		strcpy(toSend.message, "UPDATE DB");
+		sendMessage(toSend);
+	}
 }
 
 void init(){
