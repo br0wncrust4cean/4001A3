@@ -94,6 +94,7 @@ void ATM(){
 	bool received = true;
 	char cont = 'z';
 	int incorrect = 0;
+	int choice;
 	bool okay;
 	while(cont != 'x' && cont != 'X') {
 		while(promptForAccount(&toSend) != 1); 
@@ -105,8 +106,8 @@ void ATM(){
 			strcpy(receivedMessage.message, "OZ"); //Obviously fix, hardcoded server message
 			okay = receivedMessage.message[0] == 'O' && receivedMessage.message[1] == 'K';
 			if(okay == true) {
-				incorrect = 0;	
-				printf("Press 1 to display funds, 2 to withdraw");
+				incorrect = 0;
+				while(choice = promptForFunds() != 0)
 			} else {
 				incorrect++;
 				if(incorrect == 3) {
