@@ -171,14 +171,15 @@ void ATM(){
 				do{
 					choice = promptForFundsOrWithdraw();
 				} while(choice == 0);
-				if(choice == 1) {
-					printf("WHAAT");
+				if(choice == 1) {;
 					strcpy(toSend.message, "FUNDS");
 					sendMessage(toSend);
 					while(received == false) {}
 					receivedMessage.funds = 100.00;
-					printf("Funds available: %.2f", receivedMessage.funds);
-				} else if(choice == 2) {
+					printf("Funds available: %.2f\n", receivedMessage.funds);
+					choice = 2;
+					}
+				 if(choice == 2) {
 					while(toSend.funds = promptForWithdrawAmount() == -1){}
 					strcpy(toSend.message, "WITH");
 					sendMessage(toSend);
