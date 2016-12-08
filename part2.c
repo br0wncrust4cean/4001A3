@@ -168,7 +168,9 @@ void ATM(){
 			okay = receivedMessage.message[0] == 'O' && receivedMessage.message[1] == 'K';
 			if(okay == true) {
 				incorrect = 0;
-				while(choice = promptForFundsOrWithdraw() == 0){}
+				do{
+					choice = promptForFundsOrWithdraw();
+				} while(choice == 0){}
 				if(choice == 1) {
 					printf("WHAAT");
 					strcpy(toSend.message, "FUNDS");
@@ -176,17 +178,17 @@ void ATM(){
 					while(received == false) {}
 					receivedMessage.funds = 100.00;
 					printf("Funds available: %.2f", receivedMessage.funds);
-				} else {
+				} else if(choice == 2) {
 					while(toSend.funds = promptForWithdrawAmount() == -1){}
 					strcpy(toSend.message, "WITH");
 					sendMessage(toSend);
 					while(received == false) {}
 					strcpy(receivedMessage.message, "N");
 					if(receivedMessage.message[0] = 'N') {
-						printf("Not enough funds");
+						printf("Not enough funds\n");
 						while(toSend.funds = promptForWithdrawAmount() == -1){}
 					} else {
-						printf("Enough funds available");
+						printf("Enough funds available\n");
 					}
 				}
 				
