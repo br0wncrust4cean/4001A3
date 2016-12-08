@@ -89,9 +89,10 @@ void server(){
 void ATM(){
 	Message toSend;
 	int check, size, i;
-	bool valid = true;
+	bool valid;
 	while(true) {
 		do {
+			valid = true;
 			printf("Please input your account number (5 digits) : ");
 			check = scanf("%s", toSend.info.accountNo);
 			size = sizeof(toSend.info.accountNo)/sizeof(char);
@@ -105,7 +106,7 @@ void ATM(){
 		} while(check != 1 || size != 5 || valid == false); 
 		do {
 			valid = true;
-			printf("\nPlease input your PIN: ");
+			printf("\nPlease input your PIN (3 digits) : ");
 			check = scanf("%s", toSend.info.accountNo);
 			size = sizeof(toSend.info.accountNo)/sizeof(char);
 			printf("\nTHIS IS NOW THE PIN %s, size: %d", toSend.info.PIN, size);
