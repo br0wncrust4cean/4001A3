@@ -88,14 +88,17 @@ void server(){
 
 void ATM(){
 	Message toSend;
+	int check;
 	while(true) {
 		printf("Please input your account number: ");
-		scanf("%s", toSend.info.accountNo);
-		printf("\nTHIS IS NOW THE ACCOUNT NUMBER: %s", toSend.info.accountNo);
-		printf("\nPlease input your PIN: ");
-		scanf("%s", toSend.info.PIN);
-		printf("\n THIS IS NOW YOUR PIN: %s", toSend.info.PIN);
+		check = scanf("%s", toSend.info.accountNo);
+		printf("\nTHIS IS NOW THE ACCOUNT NUMBER: %s, DIGITS: %d", toSend.info.accountNo, check);
+		check = printf("\nPlease input your PIN: ");
+		check = scanf("%s", toSend.info.PIN);
+		printf("\n THIS IS NOW YOUR PIN: %s, DIGITS: %d", toSend.info.PIN, check);
 		strcpy(toSend.message, "PIN");
+		printf("\n THIS IS NOW YOUR MESSAGE: %s", toSend.message;
+		
 		
 		
 	}
