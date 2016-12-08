@@ -103,11 +103,14 @@ void ATM(){
 			strcpy(toSend.message, "PIN");
 			sendMessage(toSend);
 			while(received == false) {}
-			strcpy(receivedMessage.message, "OZ"); //Obviously fix, hardcoded server message
+			strcpy(receivedMessage.message, "OK"); //Obviously fix, hardcoded server message
 			okay = receivedMessage.message[0] == 'O' && receivedMessage.message[1] == 'K';
 			if(okay == true) {
 				incorrect = 0;
-				while(choice = promptForFunds() != 0)
+				while(choice = promptForFunds() == 0){}
+				if(choice == 1) {
+				} else {
+				}
 			} else {
 				incorrect++;
 				if(incorrect == 3) {
@@ -191,6 +194,5 @@ int main (void){
     pthread_t userThread;
     pthread_t serverThread;
     pthread_t editorThread;
-    int i = promptForFunds();
-    printf("Number: %d", i);
+    ATM();
 }
