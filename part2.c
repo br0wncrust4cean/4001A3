@@ -95,20 +95,7 @@ void ATM(){
 	incorrect = 0;
 	while(true) {
 		while(promptForAccount(&toSend) != 1); 
-		do {
-			valid = true;
-			printf("\nPlease input a valid PIN (3 digits) : ");
-			check = scanf("%s", toSend.info.accountNo);
-			printf("\nTHIS IS NOW THE PIN %s",toSend.info.PIN);
-			char *p = toSend.info.accountNo;
-			size = 0;
-			for(p; *p != '\0'; p++ ) {
-				if(!isdigit(*p)) {
-					valid = false;
-				}
-				size++;
-			}
-		} while(check != 1 || size != 3 || valid == false); 
+		while(promptForPIN(&toSend) != 1); 
 		strcpy(toSend.message, "PIN");
 		printf("\nTHIS IS NOW THE ACCOUNT NUMBER: %s\n \nTHIS IS NOW THE PIN %s\n THIS IS NOW YOUR MESSAGE: %s \n", toSend.info.accountNo,toSend.info.PIN,toSend.message");
 		sendMessage(toSend);
@@ -132,7 +119,27 @@ void ATM(){
 	
 
 }
+int promptForPIN(Message* toSend) {
+	int check, size, incorrect;
+	bool valid = true;
+	valid = true;
+	printf("\nPlease input a valid PIN (3 digits) : ");
+	check = scanf("%s", toSend->info.accountNo);
+	printf("\nTHIS IS NOW THE PIN %s",toSend->info.PIN);
+	char *p = toSend->info.accountNo;
+	size = 0;
+	for(p; *p != '\0'; p++ ) {
+		if(!isdigit(*p)) {
+			valid = false;
+		}
+		size++;
+	}
+	if(check == 1 && size == 3 && valid == true) {
+		return 1;
+	}
+	return 0;
 
+}
 int promptForAccount(Message* toSend) {
 	int check, size, incorrect;
 	bool valid = true;
@@ -169,12 +176,9 @@ void init(){
 
 int main (void){
     init();
-
     pthread_t userThread;
     pthread_t serverThread;
     pthread_t editorThread;
-
-    display(head);
 	ATM();
     
 }
