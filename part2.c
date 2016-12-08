@@ -95,7 +95,7 @@ void ATM(){
 	char cont = 'z';
 	int incorrect = 0;
 	bool okay;
-	while(cont != 'x' && continue != 'X') {
+	while(cont != 'x' && cont != 'X') {
 		while(promptForAccount(&toSend) != 1); 
 		do {
 			while(promptForPIN(&toSend) != 1); 
