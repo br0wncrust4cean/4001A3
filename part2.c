@@ -116,13 +116,10 @@ void ATM(){
 					
 				}
 			}
-		} while(okay == false && incorrect != 3)
+		} while(okay == false && incorrect != 3);
 	
 		
 	}
-	
-	
-
 }
 int promptForPIN(Message* toSend) {
 	int check, size, incorrect;
