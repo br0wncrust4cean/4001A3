@@ -94,6 +94,7 @@ void ATM(){
 	Message toSend, receivedMessage;
 	bool received = true;
 	char cont = 'z';
+	toSend.funds = -1;
 	int incorrect = 0;
 	int choice;
 	float withdraw;
@@ -117,7 +118,7 @@ void ATM(){
 					receivedMessage.funds = 100.00;
 					printf("Funds available: %.2f", receivedMessage.funds);
 				} else {
-					while(toSend.funds = promptForWithdraw() == -1){}
+					while(toSend.funds = promptForWithdrawAmount() == -1){}
 					strcpy(toSend.message, "WITH");
 					sendMessage(toSend);
 					while(received == false) {}
@@ -150,7 +151,6 @@ void ATM(){
 
 float promptForWithdrawAmount() {
 	float withdraw;
-	scanf("%d", &choice);
 	printf("Enter the amount of money to withdaw: ");
 	scanf("%d", &withdraw);
 	if(withdraw > -1) return withdraw;
