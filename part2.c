@@ -92,7 +92,7 @@ void ATM(){
 	while(true) {
 		printf("Please input your account number: ");
 		check = scanf("%s", toSend.info.accountNo);
-		printf("\nTHIS IS NOW THE ACCOUNT NUMBER: %s, DIGITS: %d, %s", toSend.info.accountNo, check, sizeof(toSend.info.accountNo)/sizeof(char));
+		printf("\nTHIS IS NOW THE ACCOUNT NUMBER: %s, DIGITS: %d, %d", toSend.info.accountNo, check, sizeof(toSend.info.accountNo)/sizeof(char));
 		check = printf("\nPlease input your PIN: ");
 		check = scanf("%s", toSend.info.PIN);
 		printf("\n THIS IS NOW YOUR PIN: %s, DIGITS: %d", toSend.info.PIN, check);
