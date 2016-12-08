@@ -100,14 +100,15 @@ void ATM(){
 		do {
 			while(promptForPIN(&toSend) != 1); 
 			strcpy(toSend.message, "PIN");
-			printf("\nTHIS IS NOW THE ACCOUNT NUMBER: %s\nTHIS IS NOW THE PIN %s\n THIS IS NOW YOUR MESSAGE: %s \n", toSend.info.accountNo,toSend.info.PIN,toSend.message);
 			sendMessage(toSend);
 			while(received == false) {}
 			strcpy(receivedMessage.message, "OZ"); //Obviously fix, hardcoded server message
 			okay = receivedMessage.message[0] == 'O' && receivedMessage.message[1] == 'K';
 			if(okay == true) {
-				printf("HALALOOOOOOOYA, topkeyk");
 				incorrect = 0;	
+				printf("Press 1 to display funds, 2 to withdraw");
+				
+				printf
 			} else {
 				incorrect++;
 				if(incorrect == 3) {
@@ -119,9 +120,19 @@ void ATM(){
 			}
 		} while(okay == false && incorrect != 3);
 	
-		printf("Enter X to quit or any another key to continue");
+		printf("Enter X to quit or any another key to continue: ");
 		scanf("%s", &cont);
 	}
+}
+int promptForFunds() {
+	printf("Press 1 to display funds, 2 to withdraw");
+	int check, size, incorrect, choice;
+	bool valid = true;
+	valid = true;
+	check = scanf("%d", &choice);
+	if(choice == 1) return 1;
+	else if(choise == 2) return 2;
+	else return 0;
 }
 int promptForPIN(Message* toSend) {
 	int check, size, incorrect;
@@ -181,6 +192,9 @@ int main (void){
     pthread_t userThread;
     pthread_t serverThread;
     pthread_t editorThread;
-	ATM();
+	//ATM();
+	while(true) {
+		printf("Number chosen: %d", promptForFunds);
+	}
     
 }
