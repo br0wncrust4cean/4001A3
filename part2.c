@@ -97,7 +97,7 @@ void ATM(){
 		check = scanf("%s", toSend.info.PIN);
 		printf("\n THIS IS NOW YOUR PIN: %s, DIGITS: %d", toSend.info.PIN, check);
 		strcpy(toSend.message, "PIN");
-		printf("\n THIS IS NOW YOUR MESSAGE: %s", toSend.message;
+		printf("\n THIS IS NOW YOUR MESSAGE: %s", toSend.message);
 		
 		
 		
