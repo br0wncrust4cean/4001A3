@@ -107,8 +107,6 @@ void ATM(){
 			if(okay == true) {
 				incorrect = 0;	
 				printf("Press 1 to display funds, 2 to withdraw");
-				
-				printf
 			} else {
 				incorrect++;
 				if(incorrect == 3) {
@@ -131,7 +129,7 @@ int promptForFunds() {
 	valid = true;
 	check = scanf("%d", &choice);
 	if(choice == 1) return 1;
-	else if(choise == 2) return 2;
+	else if(choice == 2) return 2;
 	else return 0;
 }
 int promptForPIN(Message* toSend) {
@@ -192,9 +190,6 @@ int main (void){
     pthread_t userThread;
     pthread_t serverThread;
     pthread_t editorThread;
-	//ATM();
-	while(true) {
-		printf("Number chosen: %d", promptForFunds);
-	}
-    
+    int i = promptForFunds();
+    printf("Number: %d", i);
 }
