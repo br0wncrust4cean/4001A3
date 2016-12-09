@@ -109,43 +109,10 @@ void server(){
 		fseek(file, 9, SEEK_CUR);
 		fputs(update, file);
 	} else if (strcmp(message, pinMsg) == 0) {
-		infoTuple dbRow;
-
-		FILE* file = fopen("DataBase.txt", "r");
-		int colCounter = 0;
-		char line[50];
-		
-		char* getValues = malloc(sizeof(char)*10); //idk if anyone is going to be keeping a billion bucks at the bank
-		char* front = getValues;
-		int i;
-		while(fgets(line, sizeof(line), file)){
-			char *p = line;
-			while(*p){
-				if(*p == ','){
-					if(colCounter == 0){
-						getValues = front;
-						for(i = 0; i < 5; i++){
-							dbRow.accountNo[i] = getValues[i];
-						}
-					} else if (colCounter == 1) {
-						getValues = front;
-						for(i = 0; i < 3; i++){
-							dbRow.PIN[i] = getValues[i];
-						}
-					} 
-
-					colCounter++;
-					getValues = front;
-				} else if (isdigit(*p)) {
-					*getValues = *p;
-					getValues++;
-				} else {
-					dbRow.funds = atof(getValues);
-					colCounter = 0;
-					getValues = front;
-				}
-				printf("%s, %s, %0.2f\n", dbRow.accountNo, dbRow.PIN, dbRow.funds);
-			}
+		if(checkForAccount(&receivedMessage, "DataBase.txt") == 1) {
+			//sendgoodmessage
+		} else {
+			//sendbadMessage
 		}
 	}
 }
@@ -226,6 +193,52 @@ int promptForAccount(Message* toSend) {
 	return 0;
 	
 }
+
+int checkForAccount(infoTuple* received, const char* fileName) {
+	FILE* file = fopen(fileName, "r+");
+	int colCounter = 0;
+	char line[256];
+	const char s[2] = ",";
+	char *token;
+	char values[20]; //idk if anyone is going to be keeping a billion bucks at the bank
+	char * vp = values;
+	char* front = values;
+	infoTuple i;
+	while(fgets(line, sizeof(line), file)){
+		char *p = line;
+		vp = front;
+		while(*p){
+			*vp = *p;
+			vp++;
+			p++;
+		}
+				//vp = front;
+		token = strtok(values, s);
+		  while( token != NULL )  {	
+				if(colCounter == 0) {
+					strncpy(i.accountNo, token, 20);
+					printf("ACCOUNT NO: %s \n", i.accountNo);
+				} else if(colCounter == 1) {
+					strncpy(i.PIN, token, 20);
+					printf("PIN NO: %s\n", i.PIN);	
+				} else {
+					i.funds = atof(token);
+					printf("Funds NO: %.2f\n", i.funds);
+					colCounter = -1;
+				}
+				colCounter++;
+				token = strtok(NULL, s);
+		}
+		
+		if(strcmp(i.accountNo, received->accountNo) == 0 && strcmp(i.PIN, received->PIN) == 0) {
+			received->funds = i.funds;
+			return 1;
+ 		}	
+	}
+	fclose(file);
+	return -1;
+}
+
 void *ATM(){
 	Message toSend, receivedMessage;
 	bool received = true;
