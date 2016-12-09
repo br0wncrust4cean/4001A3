@@ -97,28 +97,30 @@ void server(){
 	char* message = receivedMessage.message;
 
 	if (strcmp(message, updateMessage) == 0){
-		char info[100]; //arbitrary string
-		sprintf(info, "%5s,%3s,%0.2f", receivedMessage.info.accountNo, receivedMessage.info.PIN, receivedMessage.info.funds);
-		FILE* file = fopen("DataBase", "a");
-		fputs(info, file);
-		fclose(file);
+		updateDatabase(receivedMessage);
 	} else if (strcmp(message, requestFunds) == 0) {
-		FILE* file = fopen("DataBase", "r");
-		int numOfLines = 0;
+		//just send funds from row to ATM thread
+	} else if (strcmp(message, withdrawMsg) == 0) {
+		//float money = dbRow.funds - receivedMessage.funds;
+		float temp = 343.30;
+		char update[10];
+		snprintf(update, "%.2f", temp);
+		FILE* file = fopen("DataBase.txt", "r+");
+		fseek(file, 9, SEEK_CURR);
+		fputs(update, file);
+	} else if (strcmp(message, pinMsg) == 0) {
+		infoTuple dbRow;
+
+		FILE* file = fopen("DataBase.txt", "r");
 		int colCounter = 0;
-		const char s = ','; 
-		char line[100];
-		while (fgets(line, sizeof(line), file)){
-			numOfLines++;
-		}
-		fclose(file);
+		char line[50];
 		
-		file = fopen("DataBase", "r");
 		char* getValues = malloc(sizeof(char)*10); //idk if anyone is going to be keeping a billion bucks at the bank
 		char* front = getValues;
 		int i;
 		while(fgets(line, sizeof(line), file)){
 			char *p = line;
+			printf("%s", *p);
 			while(*p){
 				if(*p == ','){
 					if(colCounter == 0){
@@ -140,12 +142,12 @@ void server(){
 					getValues++;
 				} else {
 					dbRow.funds = atof(getValues);
+					colCounter = 0;
+					getValues = front;
 				}
+				printf("%s, %s, %0.2f\n", dbRow.accountNo, dbRow.PIN, dbRow.funds);
 			}
 		}
-		
-	} else if (strcmp(message, withdrawMsg) == 0) {
-
 	}
 }
 
@@ -153,6 +155,13 @@ void sendMessage(Message message) {
 	
 }
 
+void updateDatabase(Message receivedMessage){
+	char info[50]; //arbitrary string
+	sprintf(info, "\n%5s,%3s,%0.2f", receivedMessage.info.accountNo, receivedMessage.info.PIN, receivedMessage.info.funds);
+	FILE* file = fopen("DataBase", "a");
+	fputs(info, file);
+	fclose(file);
+}
 
 int promptForFunds(Message* toSend) {
 	int check;
@@ -218,7 +227,7 @@ int promptForAccount(Message* toSend) {
 	return 0;
 	
 }
-void ATM(){
+void *ATM(){
 	Message toSend, receivedMessage;
 	bool received = true;
 	char cont = 'z';
@@ -302,12 +311,14 @@ void init(){
 }
 
 int main (void){
-    init();
-    pthread_t userThread;
-    pthread_t serverThread;
-    pthread_t editorThread;
+    //init();
+   	//pthread_t userThread;
+   	//pthread_t editorThread;
     //ATM();
-
-	int test = 00001;
-	printf("%d", test);
+	float temp = 343.30;
+	char update[10];
+	snprintf(update, "%.2f", temp);
+	FILE* file = fopen("DataBase.txt", "r+");
+	fseek(file, 9, SEEK_CURR);
+	fputs(update, file);
 }
