@@ -315,10 +315,53 @@ int main (void){
    	//pthread_t userThread;
    	//pthread_t editorThread;
     //ATM();
+	/*
 	float temp = 343.30;
 	char update[10];
 	snprintf(update, "%.2f", temp);
 	FILE* file = fopen("DataBase.txt", "r+");
 	fseek(file, 9, SEEK_CURR);
-	fputs(update, file);
+	fputs(update, file);*/
+	infoTuple dbRow;
+
+	FILE* file = fopen("DataBase.txt", "r");
+	int colCounter = 0;
+	char line[50];
+	char *token;
+	infoTuple i;
+	char* getValues = malloc(sizeof(char)*20); //idk if anyone is going to be keeping a billion bucks at the bank
+	char* front = getValues;
+	int i;
+	while(fgets(line, sizeof(line), file)){
+		char *p = line;
+		printf("%s", *p);
+		while(*p){
+			if(*p == ','){
+				if (isdigit(*p) || *p == ','){ //stores value in the array if the value in the line is a digit
+					long val = strtol(p, &p, 10);
+					*getValues = *p;
+					*getValues++;
+				} else { //creates a PCB with all the proper values and moves to the next line
+					getValues = front;
+					token = strtok(getValues, '-');
+					p++;
+					if(colCounter == 0) {
+						printf("ACCOUNT NO: %s, %s", i.accountNo, token);
+						i.accountNo = token;
+					}
+					else if(colCounter == 1) {
+						i.PIN = token;
+						printf("PIN NO: %s, %s", i.PIN, token);
+					}
+					else {
+						colCounter = 0;
+						sscanf(token, "%.2f", &(i.funds));
+						printf("Funds NO: %.2f, %s", i.funds, token);
+					}
+				}
+			}
+			printf("%.5s, %.3s, %0.2f\n", dbRow.accountNo, dbRow.PIN, dbRow.funds);
+		}
+	}
+	fclose(file);
 }
