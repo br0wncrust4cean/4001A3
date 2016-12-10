@@ -181,7 +181,17 @@ int checkForAccount(infoTuple* received, const char* fileName) {
 	return -1;
 }
 	
-
+int checkSizeOfNum(char* num){
+	char *p;
+	p=num;
+	int returnVal = 0;
+	for(p; *p != '\0'; p++){
+		returnVal++;
+	}
+	printf("****return val: %d\n", returnVal);
+	return returnVal;
+	
+}
 
 void *ATM(){
 	Message toSend, receivedMessage;
@@ -277,17 +287,7 @@ void *ATM(){
 	//}
 }
 
-int checkSizeOfNum(char* num){
-	char *p;
-	p=num;
-	int returnVal = 0;
-	for(p; *p != '\0'; p++){
-		returnVal++;
-	}
-	printf("****return val: %d\n", returnVal);
-	return returnVal;
-	
-}
+
 
 void *server(){
 	Message receivedMessage, toSend;
@@ -334,19 +334,21 @@ void *server(){
 					sprintf(currMoney, "%.2f", dbRow.funds);
 					FILE* file = fopen("DataBase.txt", "r+");
 					while(fgets(line, sizeof(line), file)){
-						int i;
-						int numOfDigits = checkSizeOfNum(currMoney);
-						char *zeroes = malloc(sizeof(char) * numOfDigits);
-						char *zeroesFront = zeroes;
-						printf("zero stuff\n");
-						for (i = 0; i < numOfDigits; i++){
-							printf("bloop\n");
-							zeroes[i] = '0';
+						if(rowNumber = iterations){
+							int i;
+							int numOfDigits = checkSizeOfNum(currMoney);
+							char *zeroes = malloc(sizeof(char) * numOfDigits);
+							char *zeroesFront = zeroes;
+							printf("zero stuff\n");
+							for (i = 0; i < numOfDigits; i++){
+								printf("bloop\n");
+								zeroes[i] = '0';
+							}
+							zeroes = zeroesFront;
+							printf("%s\n", zeroes);
+							fseek(file, 10, SEEK_CUR);
+							fputs(zeroes, file);
 						}
-						zeroes = zeroesFront;
-						printf("%s\n", zeroes);
-						fseek(file, 10, SEEK_CUR);
-						fputs(zeroes, file);
 						iterations++;
 					}
 					fclose(file);
