@@ -345,7 +345,7 @@ void *server(){
 						}
 						zeroes = zeroesFront;
 						printf("%s\n", zeroes);
-						fseek(file, 5, SEEK_CUR);
+						fseek(file, 10, SEEK_CUR);
 						fputs(zeroes, file);
 						iterations++;
 					}
