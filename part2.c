@@ -7,9 +7,12 @@
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
-#define EditorQueue 1000
-#define ATMQueue 2000
-int keyID;
+#include <unistd.h>
+#include <time.h>
+int keyID1, keyID2;
+pthread_mutex_t  notEmpty;
+pthread_cond_t condition;
+
 typedef struct {
     char accountNo[5];
     float funds;
@@ -103,7 +106,7 @@ int promptForAccount(Message* toSend) {
 	
 }
 void messageToString(char * toFill, Message toSend) {
-	sprintf(toFill, "%s,%s,%.2f,PIN", toSend.info.accountNo, toSend.info.PIN, toSend.info.funds); 
+	sprintf(toFill, "%s,%s,%.2f,%s", toSend.info.accountNo, toSend.info.PIN, toSend.info.funds, toSend.message); 
 
 }
 Message stringToMessage(char* filled) {
@@ -113,6 +116,7 @@ Message stringToMessage(char* filled) {
 	int colCounter = 0;
 	token = strtok(filled, s);
 	while( token != NULL )  {
+		
 		if(colCounter == 0) {
 			strcpy(msg.info.accountNo, token);	
 		} else if(colCounter == 1) {
@@ -126,6 +130,7 @@ Message stringToMessage(char* filled) {
 		colCounter++;
 		token = strtok(NULL, s);
 	}
+
 	return msg;
 }
 
@@ -177,7 +182,6 @@ int checkForAccount(infoTuple* received, const char* fileName) {
 
 
 void *ATM(){
-
 	Message toSend, receivedMessage;
 	bool received = true;
 	char cont = 'z';
@@ -186,57 +190,58 @@ void *ATM(){
 	int incorrect = 0;
 	int choice = 0;
 	bool okay;
-	keyID = msgget((key_t) 1234, IPC_CREAT | 0600);
-	printf("THE ATM ID %d\n", keyID);
+	keyID1 = msgget((key_t) 1239, IPC_CREAT | 0600);
+	//printf("THE ATM ID %d\n", keyID);
 	while(cont != 'x' && cont != 'X') {
+
 		while(promptForAccount(&toSend) != 1); 
-//do {
+		do {
 			while(promptForPIN(&toSend) != 1);
 			strcpy(toSend.message, "PIN");
 			toSend.info.funds = 0.00;
 			messageToString(mbuf.mtext, toSend);
-			printf("%s\n", mbuf.mtext);
+			printf("Sending this to server: %s\n", mbuf.mtext);
 			mbuf.mtype = 1;
-			if(msgsnd(keyID, &mbuf, 25, 0) == -1) {
+			if(msgsnd(keyID1, &mbuf, 25, 0) == -1) {
 				printf("feelsbadd") ;
 			} else {
-				printf("ATM has sent message\n");
+				pthread_cond_broadcast(&condition);
+				sleep(1);
+				printf("Sent from client\n");			
+			} 
+			pthread_mutex_lock(&notEmpty);
+			while(msgrcv(keyID1, &mbuf, 25, 2, 0) == -1) {
+				pthread_cond_wait(&condition, &notEmpty); 			
 			}
-			mbuf2.mtype = 1;
-			if(msgrcv(keyID, &mbuf2, 25, 1, 0) >= 0) {
-				printf("why you hang");
-			} else {
-				printf("u no hang!");
-			}
-/*
-				printf("ATM has rec message\n");
+		
+				printf("Received from server: %s\n", mbuf.mtext);
+				receivedMessage = stringToMessage(mbuf.mtext);
 				okay = receivedMessage.message[0] == 'O' && receivedMessage.message[1] == 'K';
 				if(okay == true) {
-					printf("Im TRUE");
 					incorrect = 0;
 					do{
 						choice = promptForFundsOrWithdraw();
 					} while(choice == 0);
-					if(choice == 1) {;
+					if(choice == 1) {
 						strcpy(toSend.message, "FUNDS");
-						if(msgsnd(keyID, &mbuf, sizeof(Message) - sizeof(long), 0) == -1) {
+						if(msgsnd(keyID1, &mbuf, sizeof(Message) - sizeof(long), 0) == -1) {
 							printf("feelsbadd") ;
 						} else {
 							printf("ATM has sent message\n");
 						}
-						while(received == false) {}
-						receivedMessage.info.funds = 100.00;
+	
 						printf("Funds available: %.2f\n", receivedMessage.info.funds);
 						choice = 2;
-						}
+					}
 					 if(choice == 2) {
 						do {
 							while((toSend.info.funds = promptForWithdrawAmount()) == -1){}
 							strcpy(toSend.message, "WITH");
-							if(msgsnd(keyID, &toSend, sizeof(Message) - sizeof(long), 0) == -1) {
+							if(msgsnd(keyID1, &toSend, sizeof(Message) - sizeof(long), 0) == -1) {
 								printf("feelsbadd") ;
 							} else {
 								printf("ATM has sent message\n");
+								pthread_cond_wait(&condition, &notEmpty);
 							}
 							while(received == false) {}
 							strcpy(receivedMessage.message, "N");
@@ -249,12 +254,12 @@ void *ATM(){
 					
 					
 				} else {
-					printf("Im FALSE");
+					printf("Im FALSE\n");
 					incorrect++;
 					if(incorrect == 3) {
 						printf("Account Blocked \n");
 						strcpy(toSend.message, "BLOCKED");
-						if(msgsnd(keyID, &toSend, sizeof(Message) - sizeof(long), 0) == -1) {
+						if(msgsnd(keyID1, &toSend, sizeof(Message) - sizeof(long), 0) == -1) {
 							printf("feelsbadd") ;
 						} else {
 							printf("ATM has sent message\n");
@@ -262,19 +267,17 @@ void *ATM(){
 						
 					}
 				}
-			} else {
-				printf("did i get here?");
-			}
-		} while(okay == false && incorrect != 3); */
+			} while(okay == false && incorrect != 3); 
+		} 
 	
 		printf("Enter X to quit or any another key to continue: ");
 		scanf("%s", &cont); 
-	}
-	
+	//}
 }
 
+
 void *server(){
-	Message receivedMessage;
+	Message receivedMessage, toSend;
 	infoTuple dbRow;
 	int rowNumber;
 	message_buf mbuf;
@@ -283,23 +286,24 @@ void *server(){
 	char* requestFunds = "FUNDS";
 	char* withdrawMsg = "WITH";
 	char* pinMsg = "PIN";
-	keyID = msgget((key_t) 1234, IPC_CREAT | 0600);
-	printf("SERVER ID: %d\n", keyID);
+	keyID1= msgget((key_t) 1239, IPC_CREAT | 0600);
+	//printf("SERVER ID: %d\n", keyID);
 	while(true) 
 	{	
-		if(msgrcv(keyID, &mbuf, 25, 1, 0) >= 0) {
-			printf("Message Received: %s\n", mbuf.mtext); 
-			receivedMessage = stringToMessage(mbuf.mtext);
-			char* message = receivedMessage.message;
-			printf("My message: %s", message);
-			
-			/*if (strcmp(message, updateMessage) == 0){
+		while(msgrcv(keyID1, &mbuf, 25, 1, IPC_NOWAIT) == -1) {
+		
+		}
+			//pthread_mutex_lock(&notEmpty);
+			printf("Received from atm: %s\n", mbuf.mtext);
+			//pthread_mutex_lock(&notEmpty);
+			receivedMessage = stringToMessage(mbuf.mtext);	
+			if (strcmp(receivedMessage.message, updateMessage) == 0){
 				printf("Im update");
 				updateDatabase(receivedMessage);
-			} else if (strcmp(message, requestFunds) == 0) {
+			} else if (strcmp(receivedMessage.message, requestFunds) == 0) {
 				printf("Im rfunds");
 				//just send funds from row to ATM thread
-			} else if (strcmp(message, withdrawMsg) == 0) {
+			} else if (strcmp(receivedMessage.message, withdrawMsg) == 0) {
 				printf("Im with");
 				//float money = dbRow.funds - receivedMessage.funds;
 				float temp = 343.30;
@@ -308,32 +312,36 @@ void *server(){
 				FILE* file = fopen("DataBase.txt", "r+");
 				fseek(file, 9, SEEK_CUR);
 				fputs(update, file);
-			} else */if (strcmp(message, pinMsg) == 0) {
-				printf("Im pin");
-				Message toSend;
-				if((rowNumber = checkForAccount(&(toSend.info), "DataBase.txt")) != -1) {;
-					//s.message = "OK";
-					printf("Im here");
-					//strcpy(s.message, "OK");
-					//sendMessageS(&s, ID);
-					 printf("I SENT IT OMG");
-					//sendMessage
+			} else if(strcmp(receivedMessage.message, pinMsg)== 0) {
+				if((rowNumber = checkForAccount(&(receivedMessage.info), "DataBase.txt")) != -1) {
+					sleep(1);
+					strcpy(receivedMessage.message, "OK");
+					receivedMessage.info.funds = 3333.33; 
+					messageToString(mbuf.mtext, receivedMessage);
+					printf("Sending this to atm: %s\n", mbuf.mtext);
+					mbuf.mtype = 2;
+					if(msgsnd(keyID1, &mbuf, 25, 0) == -1) {
+						printf("feelsbadd") ;
+					} else {
+						printf("Sever has sent message\n");
+						pthread_cond_broadcast(&condition);
+						pthread_mutex_unlock(&notEmpty);
+					} 
 				} else {
-					//sendbadMessage
-					printf("ew");
 				}
-			} 
-		} else {
-			printf("Spongebob");
-		}
+			}
+		} 
 	
 	}
-}
+
+
 
 void main (void){
 	//key_t key1 =  EditorQueue;
 	//key_t key2 = ATMQueue;
 	pthread_t atm, serv;
+	pthread_mutex_init(&notEmpty, NULL);
+	pthread_cond_init(&condition, NULL); 	
  	pthread_create(&atm, NULL, ATM, NULL);
 	pthread_create(&serv, NULL, server, NULL);
 	pthread_join(serv, NULL); 
