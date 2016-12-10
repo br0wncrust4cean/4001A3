@@ -155,13 +155,15 @@ int checkForAccount(infoTuple* received, const char* fileName) {
 		}
 				//vp = front;
 		token = strtok(values, s);
-		  while( token != NULL )  {	
+		  while( token != NULL )  {
+printf("THe token is: %s\n", token);	
 				if(colCounter == 0) {
-					strncpy(i.accountNo, token, 20);
+					strcpy(i.accountNo, token);
 				} else if(colCounter == 1) {
-					strncpy(i.PIN, token, 20);	
+					strcpy(i.PIN, token);	
 				} else {
 					i.funds = atof(token);
+                                        printf("Token: %s, Funds: %f\n", token, i.funds);
 					colCounter = -1;
 				}
 				colCounter++;
@@ -172,7 +174,8 @@ int checkForAccount(infoTuple* received, const char* fileName) {
 			strcpy(received->accountNo,i.accountNo);
 			strcpy(received->PIN,i.PIN);
 			received->funds = i.funds;
-			return rowNumber;
+printf("THIS IS SERVERS FUNDS: %f", received->funds);			
+return rowNumber;
  		}
  		rowNumber++;
 		
@@ -236,11 +239,12 @@ void *ATM(){
 					} while(choice == 0);
 					if(choice == 1) {
 						strcpy(receivedMessage.message, "FUNDS");
-						mbuf.mtype = 1;
+messageToString(mbuf.mtext, receivedMessage);						
+mbuf.mtype = 1;
 						if(msgsnd(keyID1, &mbuf, 25, 0) == -1) {
 							printf("ATM could not send message: Funds \n") ;
 						} else {
-							printf("ATM has sent message: Funds\n");
+							printf("ATM has sent message: %s\n", mbuf.mtext);
 						}
 						while(msgrcv(keyID1, &mbuf, 25, 2, 0) == -1) {
 							printf("Im from AT, waiting on you to signal!");
@@ -389,7 +393,7 @@ void *server(){
 					
 					printf("This is to check foir wrong pins, not handled yet\n");
 				}
-			}
+			} else printf("pls not here");
 		} 
 	
 	}
