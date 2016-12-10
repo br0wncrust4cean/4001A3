@@ -111,7 +111,6 @@ Message stringToMessage(char* filled) {
 	char *token;
 	Message msg;
 	int colCounter = 0;
-	printf("%s\n", filled);
 	token = strtok(filled, s);
 	while( token != NULL )  {
 		if(colCounter == 0) {
@@ -183,7 +182,7 @@ void *ATM(){
 	bool received = true;
 	char cont = 'z';
 	toSend.info.funds = -1;
-	message_buf mbuf;
+	message_buf mbuf, mbuf2;
 	int incorrect = 0;
 	int choice = 0;
 	bool okay;
@@ -191,7 +190,7 @@ void *ATM(){
 	printf("THE ATM ID %d\n", keyID);
 	while(cont != 'x' && cont != 'X') {
 		while(promptForAccount(&toSend) != 1); 
-		do {
+//do {
 			while(promptForPIN(&toSend) != 1);
 			strcpy(toSend.message, "PIN");
 			toSend.info.funds = 0.00;
@@ -203,63 +202,70 @@ void *ATM(){
 			} else {
 				printf("ATM has sent message\n");
 			}
-			if(msgrcv(keyID, &mbuf, 25, 2, 0) < 0) {
-				printf("feelsbadd") ;
+			mbuf2.mtype = 1;
+			if(msgrcv(keyID, &mbuf2, 25, 1, 0) >= 0) {
+				printf("why you hang");
+			} else {
+				printf("u no hang!");
 			}
-			printf("ATM has rec message\n");
-			okay = receivedMessage.message[0] == 'O' && receivedMessage.message[1] == 'K';
-			if(okay == true) {
-				printf("Im TRUE");
-				incorrect = 0;
-				do{
-					choice = promptForFundsOrWithdraw();
-				} while(choice == 0);
-				if(choice == 1) {;
-					strcpy(toSend.message, "FUNDS");
-					if(msgsnd(keyID, &toSend, sizeof(Message) - sizeof(long), 0) == -1) {
-						printf("feelsbadd") ;
-					} else {
-						printf("ATM has sent message\n");
-					}
-					while(received == false) {}
-					receivedMessage.info.funds = 100.00;
-					printf("Funds available: %.2f\n", receivedMessage.info.funds);
-					choice = 2;
-					}
-				 if(choice == 2) {
-					do {
-						while((toSend.info.funds = promptForWithdrawAmount()) == -1){}
-						strcpy(toSend.message, "WITH");
-						if(msgsnd(keyID, &toSend, sizeof(Message) - sizeof(long), 0) == -1) {
+/*
+				printf("ATM has rec message\n");
+				okay = receivedMessage.message[0] == 'O' && receivedMessage.message[1] == 'K';
+				if(okay == true) {
+					printf("Im TRUE");
+					incorrect = 0;
+					do{
+						choice = promptForFundsOrWithdraw();
+					} while(choice == 0);
+					if(choice == 1) {;
+						strcpy(toSend.message, "FUNDS");
+						if(msgsnd(keyID, &mbuf, sizeof(Message) - sizeof(long), 0) == -1) {
 							printf("feelsbadd") ;
 						} else {
 							printf("ATM has sent message\n");
 						}
 						while(received == false) {}
-						strcpy(receivedMessage.message, "N");
-						if(receivedMessage.message[0] == 'N') {
-							printf("Not enough funds\n");
-						} 
-					} while(receivedMessage.message[0] == 'N');
-				 printf("Enough funds available\n");
-				}
-				
-				
-			} else {
-				printf("Im FALSE");
-				incorrect++;
-				if(incorrect == 3) {
-					printf("Account Blocked \n");
-					strcpy(toSend.message, "BLOCKED");
-					if(msgsnd(keyID, &toSend, sizeof(Message) - sizeof(long), 0) == -1) {
-						printf("feelsbadd") ;
-					} else {
-						printf("ATM has sent message\n");
+						receivedMessage.info.funds = 100.00;
+						printf("Funds available: %.2f\n", receivedMessage.info.funds);
+						choice = 2;
+						}
+					 if(choice == 2) {
+						do {
+							while((toSend.info.funds = promptForWithdrawAmount()) == -1){}
+							strcpy(toSend.message, "WITH");
+							if(msgsnd(keyID, &toSend, sizeof(Message) - sizeof(long), 0) == -1) {
+								printf("feelsbadd") ;
+							} else {
+								printf("ATM has sent message\n");
+							}
+							while(received == false) {}
+							strcpy(receivedMessage.message, "N");
+							if(receivedMessage.message[0] == 'N') {
+								printf("Not enough funds\n");
+							} 
+						} while(receivedMessage.message[0] == 'N');
+					 printf("Enough funds available\n");
 					}
 					
+					
+				} else {
+					printf("Im FALSE");
+					incorrect++;
+					if(incorrect == 3) {
+						printf("Account Blocked \n");
+						strcpy(toSend.message, "BLOCKED");
+						if(msgsnd(keyID, &toSend, sizeof(Message) - sizeof(long), 0) == -1) {
+							printf("feelsbadd") ;
+						} else {
+							printf("ATM has sent message\n");
+						}
+						
+					}
 				}
+			} else {
+				printf("did i get here?");
 			}
-		} while(okay == false && incorrect != 3); 
+		} while(okay == false && incorrect != 3); */
 	
 		printf("Enter X to quit or any another key to continue: ");
 		scanf("%s", &cont); 
@@ -282,11 +288,12 @@ void *server(){
 	while(true) 
 	{	
 		if(msgrcv(keyID, &mbuf, 25, 1, 0) >= 0) {
-			printf("Message Received: &s\n", mbuf.mtext); 
+			printf("Message Received: %s\n", mbuf.mtext); 
 			receivedMessage = stringToMessage(mbuf.mtext);
 			char* message = receivedMessage.message;
+			printf("My message: %s", message);
 			
-			if (strcmp(message, updateMessage) == 0){
+			/*if (strcmp(message, updateMessage) == 0){
 				printf("Im update");
 				updateDatabase(receivedMessage);
 			} else if (strcmp(message, requestFunds) == 0) {
@@ -301,7 +308,7 @@ void *server(){
 				FILE* file = fopen("DataBase.txt", "r+");
 				fseek(file, 9, SEEK_CUR);
 				fputs(update, file);
-			} else if (strcmp(message, pinMsg) == 0) {
+			} else */if (strcmp(message, pinMsg) == 0) {
 				printf("Im pin");
 				Message toSend;
 				if((rowNumber = checkForAccount(&(toSend.info), "DataBase.txt")) != -1) {;
@@ -329,7 +336,8 @@ void main (void){
 	pthread_t atm, serv;
  	pthread_create(&atm, NULL, ATM, NULL);
 	pthread_create(&serv, NULL, server, NULL);
-	pthread_join(atm, NULL);
 	pthread_join(serv, NULL); 
+	pthread_join(atm, NULL);
+	
 
 }
