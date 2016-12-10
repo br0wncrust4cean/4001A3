@@ -223,7 +223,7 @@ void *ATM(){
 			} 
 			pthread_mutex_lock(&notEmpty);
 			while(msgrcv(keyID1, &mbuf, 25, 2, 0) == -1) {
-				pthread_cond_wait(&condition, &notEmpty); 			
+				//pthread_cond_wait(&condition, &notEmpty); 			
 			}
 		
 				printf("Received from server: %s\n", mbuf.mtext);
@@ -363,9 +363,9 @@ void *server(){
 					fclose(file);
 				}
 			} else if(strcmp(receivedMessage.message, pinMsg)== 0) {
-				printf("do i make it here, its a pin\n");
+
 				if((rowNumber = checkForAccount(&(dbRow), "DataBase.txt")) != -1) {
-					sleep(1);
+					printf("do i make it here, its a pin\n");;
 					strcpy(receivedMessage.message, "OK");
 					messageToString(mbuf.mtext, receivedMessage);
 					printf("Sending this to atm: %s\n", mbuf.mtext);
