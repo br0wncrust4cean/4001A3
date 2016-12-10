@@ -219,11 +219,11 @@ void *ATM(){
 			} else {
 				pthread_cond_broadcast(&condition);
 				sleep(1);
-				printf("Sent from client\n");			
+				printf("Sent PIN from client\n");			
 			} 
 			pthread_mutex_lock(&notEmpty);
 			while(msgrcv(keyID1, &mbuf, 25, 2, 0) == -1) {
-				//pthread_cond_wait(&condition, &notEmpty); 			
+				pthread_cond_wait(&condition, &notEmpty); 			
 			}
 		
 				printf("Received from server: %s\n", mbuf.mtext);
@@ -240,7 +240,7 @@ void *ATM(){
 						if(msgsnd(keyID1, &mbuf, 25, 0) == -1) {
 							printf("ATM could not send message: Funds \n") ;
 						} else {
-							printf("ATM has sent message\n");
+							printf("ATM has sent message: Funds\n");
 						}
 						while(msgrcv(keyID1, &mbuf, 25, 2, 0) == -1) {
 							printf("Im from AT, waiting on you to signal!");
@@ -318,12 +318,20 @@ void *server(){
 			printf("Received from atm: %s\n", mbuf.mtext);
 			//pthread_mutex_lock(&notEmpty);
 			receivedMessage = stringToMessage(mbuf.mtext);	
-			printf("do i make it here, after converting?\n");
 			if (strcmp(receivedMessage.message, updateMessage) == 0){
 				printf("Im update");
 				updateDatabase(receivedMessage);
 			} else if (strcmp(receivedMessage.message, requestFunds) == 0) {
-				printf("Im rfunds");
+				printf("Im rfunds: HALLO");
+				messageToString(receivedMessage, mbuf.mtext)
+				mbuf.mtype = 2;
+				if(msgsnd(keyID1, &mbuf, 25, 0) == -1) {
+						printf("feelsbadd") ;
+					} else {
+						printf("Sever has sent message FUNDS: OK\n");
+						pthread_cond_broadcast(&condition);
+						pthread_mutex_unlock(&notEmpty);
+					} 
 				//just send funds from row to ATM thread
 			} else if (strcmp(receivedMessage.message, withdrawMsg) == 0) {
 				printf("Im with");
@@ -373,14 +381,14 @@ void *server(){
 					if(msgsnd(keyID1, &mbuf, 25, 0) == -1) {
 						printf("feelsbadd") ;
 					} else {
-						printf("Sever has sent message\n");
+						printf("Sever has sent message: OK\n");
 						pthread_cond_broadcast(&condition);
 						pthread_mutex_unlock(&notEmpty);
 					} 
 				} else {
-				
-printf("do i make it here, its not? pin\n");
-}
+					
+					printf("This is to check foir wrong pins, not handled yet\n");
+				}
 			}
 		} 
 	
