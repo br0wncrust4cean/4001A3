@@ -277,6 +277,17 @@ void *ATM(){
 	//}
 }
 
+int checkSizeOfNum(char* num){
+	char *p;
+	p=num;
+	int returnVal = 0;
+	for(p; *p != '\0'; p++){
+		returnVal++;
+	}
+	printf("****return val: %d\n", returnVal);
+	return returnVal;
+	
+}
 
 void *server(){
 	Message receivedMessage, toSend;
@@ -312,6 +323,7 @@ void *server(){
 					strcpy(receivedMessage.message, "Y");
 					messageToString(mbuf.mtext,receivedMessage);
 					char update[10];
+					char currMoney[10];
 					char line[256];
 					char *values = malloc(sizeof(char) * 25);
 					char* front = values;
@@ -319,10 +331,11 @@ void *server(){
 					char *currFunds = malloc(sizeof(char) * 10);
 					sprintf(update, "%.2f", money);
 					int iterations = 0, col = 0;
+					sprintf(currMoney, "%.2f", dbRow.funds);
 					FILE* file = fopen("DataBase.txt", "r+");
 					while(fgets(line, sizeof(line), file)){
 						int i;
-						int numOfDigits = checkSizeOfNum();
+						int numOfDigits = checkSizeOfNum(currMoney);
 						char *zeroes = malloc(sizeof(char) * numOfDigits);
 						char *zeroesFront = zeroes;
 						printf("zero stuff\n");
