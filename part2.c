@@ -323,7 +323,7 @@ void *server(){
 				updateDatabase(receivedMessage);
 			} else if (strcmp(receivedMessage.message, requestFunds) == 0) {
 				printf("Im rfunds: HALLO");
-				messageToString(receivedMessage, mbuf.mtext)
+				messageToString(mbuf.mtext,receivedMessage);
 				mbuf.mtype = 2;
 				if(msgsnd(keyID1, &mbuf, 25, 0) == -1) {
 						printf("feelsbadd") ;
