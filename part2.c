@@ -169,6 +169,8 @@ int checkForAccount(infoTuple* received, const char* fileName) {
 		}
 		
 		if(strcmp(i.accountNo, received->accountNo) == 0 && strcmp(i.PIN, received->PIN) == 0) {
+			strcpy(received->accountNo,i.accountNo);
+			strcpy(received->PIN,i.PIN);
 			received->funds = i.funds;
 			return rowNumber;
  		}
@@ -305,17 +307,17 @@ void *server(){
 				//just send funds from row to ATM thread
 			} else if (strcmp(receivedMessage.message, withdrawMsg) == 0) {
 				printf("Im with");
-				if(receivedMessage.funds < dbRow.funds){
-					strcpy(toSendMessage.message, "Y");
-					sendMessage(toSendMessage);
-					float money = dbRow.funds - receivedMessage.funds;
+				if(receivedMessage.info.funds < dbRow.funds){
+					float money = dbRow.funds - receivedMessage.info.funds;
+					strcpy(receivedMessage.message, "Y");
+					messageToString(mbuf.mtext,receivedMessage);
 					char update[10];
 					char line[256];
 					char *values = malloc(sizeof(char) * 25);
 					char* front = values;
 					const char s[2] = ",";
 					char *currFunds = malloc(sizeof(char) * 10);
-					sprintf(update, "%.2f", temp);
+					sprintf(update, "%.2f", money);
 					int iterations = 0, col = 0;
 					FILE* file = fopen("DataBase.txt", "r+");
 					while(fgets(line, sizeof(line), file)){
@@ -337,7 +339,7 @@ void *server(){
 					fclose(file);
 				}
 			} else if(strcmp(receivedMessage.message, pinMsg)== 0) {
-				if((rowNumber = checkForAccount(&(receivedMessage.info), "DataBase.txt")) != -1) {
+				if((rowNumber = checkForAccount(&(dbRow), "DataBase.txt")) != -1) {
 					sleep(1);
 					strcpy(receivedMessage.message, "OK");
 					receivedMessage.info.funds = 3333.33; 
