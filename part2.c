@@ -364,7 +364,7 @@ void *server(){
 				}
 			} else if(strcmp(receivedMessage.message, pinMsg)== 0) {
 
-				if((rowNumber = checkForAccount(&(dbRow), "DataBase.txt")) != -1) {
+				if((rowNumber = checkForAccount((&receivedMessage.info), "DataBase.txt")) != -1) {
 					printf("do i make it here, its a pin\n");;
 					strcpy(receivedMessage.message, "OK");
 					messageToString(mbuf.mtext, receivedMessage);
@@ -378,7 +378,9 @@ void *server(){
 						pthread_mutex_unlock(&notEmpty);
 					} 
 				} else {
-				}
+				
+printf("do i make it here, its not? pin\n");
+}
 			}
 		} 
 	
