@@ -369,6 +369,7 @@ void *server(){
 							printf("%s\n", zeroes);
 							fseek(file, 10, SEEK_CUR);
 							fputs(zeroes, file);
+							fputs(update, file);
 						}
 						iterations++;
 					}
