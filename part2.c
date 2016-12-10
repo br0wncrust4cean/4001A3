@@ -305,13 +305,37 @@ void *server(){
 				//just send funds from row to ATM thread
 			} else if (strcmp(receivedMessage.message, withdrawMsg) == 0) {
 				printf("Im with");
-				//float money = dbRow.funds - receivedMessage.funds;
-				float temp = 343.30;
-				char update[10];
-				sprintf(update, "%.2f", temp);
-				FILE* file = fopen("DataBase.txt", "r+");
-				fseek(file, 9, SEEK_CUR);
-				fputs(update, file);
+				if(receivedMessage.funds < dbRow.funds){
+					strcpy(toSendMessage.message, "Y");
+					sendMessage(toSendMessage);
+					float money = dbRow.funds - receivedMessage.funds;
+					char update[10];
+					char line[256];
+					char *values = malloc(sizeof(char) * 25);
+					char* front = values;
+					const char s[2] = ",";
+					char *currFunds = malloc(sizeof(char) * 10);
+					sprintf(update, "%.2f", temp);
+					int iterations = 0, col = 0;
+					FILE* file = fopen("DataBase.txt", "r+");
+					while(fgets(line, sizeof(line), file)){
+						int i;
+						int numOfDigits = checkSizeOfNum();
+						char *zeroes = malloc(sizeof(char) * numOfDigits);
+						char *zeroesFront = zeroes;
+						printf("zero stuff\n");
+						for (i = 0; i < numOfDigits; i++){
+							printf("bloop\n");
+							zeroes[i] = '0';
+						}
+						zeroes = zeroesFront;
+						printf("%s\n", zeroes);
+						fseek(file, 5, SEEK_CUR);
+						fputs(zeroes, file);
+						iterations++;
+					}
+					fclose(file);
+				}
 			} else if(strcmp(receivedMessage.message, pinMsg)== 0) {
 				if((rowNumber = checkForAccount(&(receivedMessage.info), "DataBase.txt")) != -1) {
 					sleep(1);
