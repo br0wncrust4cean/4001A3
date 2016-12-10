@@ -235,28 +235,36 @@ void *ATM(){
 						choice = promptForFundsOrWithdraw();
 					} while(choice == 0);
 					if(choice == 1) {
-						strcpy(toSend.message, "FUNDS");
-						if(msgsnd(keyID1, &mbuf, sizeof(Message) - sizeof(long), 0) == -1) {
-							printf("feelsbadd") ;
+						strcpy(receivedMessage.message, "FUNDS");
+						mbuf.mtype = 1;
+						if(msgsnd(keyID1, &mbuf, 25, 0) == -1) {
+							printf("ATM could not send message: Funds \n") ;
 						} else {
 							printf("ATM has sent message\n");
 						}
-	
+						while(msgrcv(keyID1, &mbuf, 25, 2, 0) == -1) {
+							pthread_cond_wait(&condition, &notEmpty); 			
+						}
+						receivedMessage = stringToMessage(mbuf.mtext, receivedMessage);
 						printf("Funds available: %.2f\n", receivedMessage.info.funds);
-						choice = 2;
+						choice = 2; //Needed to move on, hence why its not an if else!
 					}
-					 if(choice == 2) {
+					if(choice == 2) {
 						do {
-							while((toSend.info.funds = promptForWithdrawAmount()) == -1){}
-							strcpy(toSend.message, "WITH");
-							if(msgsnd(keyID1, &toSend, sizeof(Message) - sizeof(long), 0) == -1) {
+							while((receivedMessage.info.funds = promptForWithdrawAmount()) == -1){}
+							strcpy(receivedMessage.message, "WITH");
+							mbuf.mtype = 1;
+							messageToString(mbuf.mtext, receivedMessage);
+							if(msgsnd(keyID1, &mbuf,25 , 0) == -1) {
 								printf("feelsbadd") ;
 							} else {
-								printf("ATM has sent message\n");
+								printf("ATM has sent message: WITH\n");
 								pthread_cond_wait(&condition, &notEmpty);
 							}
-							while(received == false) {}
-							strcpy(receivedMessage.message, "N");
+							printf("Check if we made it past the conditional wait\n");
+							while(msgrcv(keyID1, &mbuf, 25, 2, 0) == -1) {
+								pthread_cond_wait(&condition, &notEmpty); 			
+							}
 							if(receivedMessage.message[0] == 'N') {
 								printf("Not enough funds\n");
 							} 
@@ -270,8 +278,9 @@ void *ATM(){
 					incorrect++;
 					if(incorrect == 3) {
 						printf("Account Blocked \n");
-						strcpy(toSend.message, "BLOCKED");
-						if(msgsnd(keyID1, &toSend, sizeof(Message) - sizeof(long), 0) == -1) {
+						strcpy(receivedMessage.message, "BLOCKED");
+						messageToString(mbuf.mtext, receivedMessage);
+						if(msgsnd(keyID1, &mfbuf, 25, 0) == -1) {
 							printf("feelsbadd") ;
 						} else {
 							printf("ATM has sent message\n");
@@ -280,11 +289,9 @@ void *ATM(){
 					}
 				}
 			} while(okay == false && incorrect != 3); 
+			printf("Enter X to quit or any another key to continue: ");
+			scanf("%s", &cont); 
 		} 
-	
-		printf("Enter X to quit or any another key to continue: ");
-		scanf("%s", &cont); 
-	//}
 }
 
 
@@ -357,7 +364,6 @@ void *server(){
 				if((rowNumber = checkForAccount(&(dbRow), "DataBase.txt")) != -1) {
 					sleep(1);
 					strcpy(receivedMessage.message, "OK");
-					receivedMessage.info.funds = 3333.33; 
 					messageToString(mbuf.mtext, receivedMessage);
 					printf("Sending this to atm: %s\n", mbuf.mtext);
 					mbuf.mtype = 2;
