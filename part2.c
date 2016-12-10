@@ -245,7 +245,7 @@ void *ATM(){
 						while(msgrcv(keyID1, &mbuf, 25, 2, 0) == -1) {
 							pthread_cond_wait(&condition, &notEmpty); 			
 						}
-						receivedMessage = stringToMessage(mbuf.mtext, receivedMessage);
+						receivedMessage = stringToMessage(mbuf.mtext);
 						printf("Funds available: %.2f\n", receivedMessage.info.funds);
 						choice = 2; //Needed to move on, hence why its not an if else!
 					}
@@ -280,7 +280,7 @@ void *ATM(){
 						printf("Account Blocked \n");
 						strcpy(receivedMessage.message, "BLOCKED");
 						messageToString(mbuf.mtext, receivedMessage);
-						if(msgsnd(keyID1, &mfbuf, 25, 0) == -1) {
+						if(msgsnd(keyID1, &mbuf, 25, 0) == -1) {
 							printf("feelsbadd") ;
 						} else {
 							printf("ATM has sent message\n");
