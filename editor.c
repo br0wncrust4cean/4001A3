@@ -1,3 +1,7 @@
+/**
+ * Bhavik Tailor 100973983
+ * Tanzim Zaman 100969782
+ */
 #include <stdio.h>
 #include <pthread.h>
 #include <stdlib.h>
