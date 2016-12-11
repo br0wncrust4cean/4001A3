@@ -174,7 +174,7 @@ int checkForAccount(infoTuple* received, const char* fileName) {
 	char * vp = values;
 	char* front = values;
 	infoTuple i;
-	int rowNumber;
+	int rowNumber = 0;
 	while(fgets(line, sizeof(line), file)){
 		char *p = line;
 		vp = front;
