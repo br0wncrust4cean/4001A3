@@ -307,15 +307,17 @@ void *ATM(){
 							} else {
 								printf("ATM has sent message: WITH\n");
 							}
-							printf("Check if we made it past the conditional wait\n");
 							while(msgrcv(keyID1, &mbuf, 25, 2, 0) == -1) {
 								pthread_cond_wait(&condition, &notEmpty); 			
 							}
-							if(strcmp(receivedMessage.message, "ENOUGH")== 0) {
+							receiveMessage = stringToMessage(mbuf.mtext);
+							if(strcmp(receivedMessage.message, "N")== 0) {
 								printf("Not enough funds\n");
-							} 
+							} else if {
+								printf("Enough funds available\n");
+							}
 						} while(receivedMessage.message[0] == 'E');
-					 printf("Enough funds available\n");
+
 					}
 		
 				} else {
