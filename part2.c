@@ -398,24 +398,24 @@ void *server(){
 					sprintf(currMoney, "%.2f", dbRow.funds);
 					FILE* file1 = fopen("DataBase.txt", "r+");
 					while(fgets(line, sizeof(line), file1)){
-					if (rowNumber-1 == iterations){
-						printf("ROWNUMBER/IT: %d, %d", rowNumber, iterations);							
-						int i;
-						int numOfDigits = checkSizeOfNum(currMoney);
-						char *zeroes = malloc(sizeof(char) * numOfDigits);
-						char *zeroesFront = zeroes;
-						printf("zero stuff\n");
-						for (i = 0; i < numOfDigits; i++){
-							printf("bloop\n");
-							zeroes[i] = '0';
-						}
-						zeroes = zeroesFront;
-						printf("%s\n", zeroes);
-						fseek(file1, 10, SEEK_CUR);
-						fputs(zeroes, file1);
-						fseek(file1, -numOfDigits, SEEK_CUR);
-						fputs(update, file1);
-						break;
+						if (rowNumber-1 == iterations){
+							printf("ROWNUMBER/IT: %d, %d", rowNumber, iterations);							
+							int i;
+							int numOfDigits = checkSizeOfNum(currMoney);
+							char *zeroes = malloc(sizeof(char) * numOfDigits);
+							char *zeroesFront = zeroes;
+							printf("zero stuff\n");
+							for (i = 0; i < numOfDigits; i++){
+								printf("bloop\n");
+								zeroes[i] = '0';
+							}
+							zeroes = zeroesFront;
+							printf("%s\n", zeroes);
+							fseek(file1, 10, SEEK_CUR);
+							fputs(zeroes, file1);
+							fseek(file1, -numOfDigits, SEEK_CUR);
+							fputs(update, file1);
+							break;
 						}
 						iterations++;
 					}
@@ -479,7 +479,16 @@ void *server(){
 
 				}
 			} else if(strcmp(receivedMessage.message, "BLOCKED")== 0) {
-					//if(rowNumber == -1)
+				FILE* file2 = fopen("DataBase.txt", "r+")
+				int iterations = 0;
+				while(fgets(line, sizeof(line), file1)){
+					if (rowNumber-1 == iterations){
+						fseek(file1, 0, SEEK_CUR);
+						fputc('X', file2);
+						break;
+					}
+					iterations++;
+				}
 			}
 		} 
 	
