@@ -343,7 +343,7 @@ void *ATM(){
 void *server(){
 	Message receivedMessage, toSend;
 	infoTuple dbRow;
-	int rowNumber;
+	int rowNumber = -1;
 	message_buf mbuf;
 	//probably want to make these constants
 	char* updateMessage = "UPDATE DB";
@@ -418,7 +418,9 @@ void *server(){
 			} else if(strcmp(receivedMessage.message, pinMsg)== 0) {
 
 				if((rowNumber = checkForAccount((&receivedMessage.info), "DataBase.txt")) != -1) {
-					printf("do i make it here, its a pin\n");;
+					strcpy(dbRow.accountNo,receivedMessage.info.accountNo);
+					strcpy(dbRow.PIN,receivedMessage.info.PIN);
+					dbRow.funds = receivedMessage.info.funds;
 					strcpy(receivedMessage.message, "OK");
 					messageToString(mbuf.mtext, receivedMessage);
 					printf("Sending this to atm: %s\n", mbuf.mtext);
