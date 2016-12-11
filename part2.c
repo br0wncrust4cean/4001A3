@@ -483,9 +483,9 @@ void *server(){
 			} else if(strcmp(receivedMessage.message, "BLOCKED")== 0) {
 				FILE* file2 = fopen("DataBase.txt", "r+")
 				int iterations = 0;
-				while(fgets(line, sizeof(line), file1)){
+				while(fgets(line, sizeof(line), file2)){
 					if (rowNumber-1 == iterations){
-						fseek(file1, 0, SEEK_CUR);
+						fseek(file2, 0, SEEK_CUR);
 						fputc('X', file2);
 						break;
 					}
