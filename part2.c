@@ -209,6 +209,7 @@ int checkForAccount(infoTuple* received, const char* fileName) {
 			strcpy(received->PIN,i.PIN);
 			received->funds = i.funds;
 printf("THIS IS SERVERS FUNDS: %f", received->funds);			
+fclose(file);
 return rowNumber;
  		}
  		rowNumber++;
@@ -398,6 +399,8 @@ void *server(){
 					FILE* file = fopen("DataBase.txt", "r+");
 					while(fgets(line, sizeof(line), file)){
 						if(rowNumber == iterations){
+
+							printf("ROWNUMBER/IT: %d, %d", rowNumber, iterations);							
 							int i;
 							int numOfDigits = checkSizeOfNum(currMoney);
 							char *zeroes = malloc(sizeof(char) * numOfDigits);
@@ -416,6 +419,7 @@ void *server(){
 						iterations++;
 					}
 					fclose(file);
+					printf("CLOSED FILE");
 				}
 			} else if(strcmp(receivedMessage.message, pinMsg)== 0) {
 
