@@ -460,6 +460,7 @@ void *server(){
 				}
 			} else if(strcmp(receivedMessage.message, "BLOCKED")== 0) {
 				FILE* file2 = fopen("DataBase.txt", "r+");
+				char line[256];
 				int iterations = 0;
 				while(fgets(line, sizeof(line), file2)){
 					if (rowNumber-1 == iterations){
