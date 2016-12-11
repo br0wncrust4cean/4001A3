@@ -35,7 +35,7 @@ typedef struct {
 //message to receive and send messages to the message queue
 typedef struct msgbuf {
 	long mtype;
-	char mtext[25];
+	char mtext[30];
 } message_buf;
 
 /**
@@ -259,7 +259,7 @@ void *ATM(){
 			messageToString(mbuf.mtext, toSend);
 			printf("Sending this to server: %s\n", mbuf.mtext);
 			mbuf.mtype = 1;
-			if(msgsnd(keyID1, &mbuf, 25, 0) == -1) {
+			if(msgsnd(keyID1, &mbuf, 30, 0) == -1) {
 				printf("feelsbadd") ;
 			} else {
 				pthread_cond_broadcast(&condition);
@@ -267,7 +267,7 @@ void *ATM(){
 				printf("Sent PIN from client\n");			
 			} 
 			pthread_mutex_lock(&notEmpty);
-			while(msgrcv(keyID1, &mbuf, 25, 2, 0) == -1) {
+			while(msgrcv(keyID1, &mbuf, 30, 2, 0) == -1) {
 				pthread_cond_wait(&condition, &notEmpty); 			
 			}
 		
@@ -283,12 +283,12 @@ void *ATM(){
 						strcpy(receivedMessage.message, "FUNDS");
 						messageToString(mbuf.mtext, receivedMessage);						
 						mbuf.mtype = 1;
-						if(msgsnd(keyID1, &mbuf, 25, 0) == -1) {
+						if(msgsnd(keyID1, &mbuf, 30, 0) == -1) {
 							printf("ATM could not send message: Funds \n") ;
 						} else {
 							printf("ATM has sent message: %s\n", mbuf.mtext);
 						}
-						while(msgrcv(keyID1, &mbuf, 25, 2, 0) == -1) {
+						while(msgrcv(keyID1, &mbuf, 30, 2, 0) == -1) {
 							printf("Im from AT, waiting on you to signal!");
 							pthread_cond_wait(&condition, &notEmpty); 			
 						}
@@ -301,12 +301,12 @@ void *ATM(){
 						strcpy(receivedMessage.message, "WITH");
 						mbuf.mtype = 1;
 						messageToString(mbuf.mtext, receivedMessage);
-						if(msgsnd(keyID1, &mbuf,25 , 0) == -1) {
+						if(msgsnd(keyID1, &mbuf,30 , 0) == -1) {
 							printf("feelsbadd") ;
 						} else {
 							printf("ATM has sent message: WITH\n");
 						}
-						while(msgrcv(keyID1, &mbuf, 25, 2, 0) == -1) {
+						while(msgrcv(keyID1, &mbuf, 30, 2, 0) == -1) {
 							pthread_cond_wait(&condition, &notEmpty); 			
 						}
 						receivedMessage = stringToMessage(mbuf.mtext);
@@ -326,7 +326,7 @@ void *ATM(){
 						strcpy(receivedMessage.message, "BLOCKED");
 						messageToString(mbuf.mtext, receivedMessage);
 						mbuf.mtype = 1;
-						if(msgsnd(keyID1, &mbuf, 25, 0) == -1) {
+						if(msgsnd(keyID1, &mbuf, 30, 0) == -1) {
 							printf("feelsbadd") ;
 						} else {
 							printf("ATM has sent BLOCKED\n");
@@ -358,7 +358,7 @@ void *server(){
 	//printf("SERVER ID: %d\n", keyID);
 	while(true) 
 	{	
-		while(msgrcv(keyID1, &mbuf, 25, 1, IPC_NOWAIT) == -1) {
+		while(msgrcv(keyID1, &mbuf, 30, 1, IPC_NOWAIT) == -1) {
 		
 		}
 			//pthread_mutex_lock(&notEmpty);
