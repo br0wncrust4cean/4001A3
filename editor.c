@@ -80,10 +80,12 @@ void *editor(){
 	message_buf msg;
 	keyID1 = msgget((key_t) 1239, IPC_CREAT | 0600);
 	while(true) {
+		char *msgStr = malloc(sizeof(char)*25);
 		while(promptForAccount(&info) != 1);
 		while(promptForPIN(&info) != 1);
 		while(promptForFunds(&info) != 1);
-		strcpy(toSend.message, "UPDATE DB");
+		sprintf(msgStr, "%5s,%3s,%0.2f,UPDATE DB", infoTuple.accountNo, infoTuple.PIN, infoTuple.funds);
+		strcpy(msg.mtext, msgStr);
 		msg.mtype = 1;
 		if(msgsnd(keyID1, &msg, 25, 0) == -1){
 			printf("Error");
