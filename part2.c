@@ -42,6 +42,7 @@ void updateDatabase(Message receivedMessage){
 	FILE* file = fopen("DataBase", "a");
 	fputs(info, file);
 	fclose(file);
+	free(file);
 }
 
 /**
@@ -210,6 +211,7 @@ return rowNumber;
 		
 	}
 	fclose(file);
+	free(file);
 	return -1;
 }
 
@@ -411,6 +413,7 @@ void *server(){
 						iterations++;
 					}
 					fclose(file);
+					free(file);
 				}
 			} else if(strcmp(receivedMessage.message, pinMsg)== 0) {
 
