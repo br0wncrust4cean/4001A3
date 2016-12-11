@@ -7,26 +7,27 @@
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/msg.h> 
+int keyID1;
+
 typedef struct {
     char accountNo[5];
     char PIN[3];
     float funds;
 } infoTuple;
 
-struct node
-{
-    infoTuple data;
-    struct node *next;
-}*head;
- 
 typedef struct {
     char message[9];
     infoTuple info;
 	float funds;
 }Message;
 
+//message to receive and send messages to the message queue
+typedef struct msgbuf {
+	long mtype;
+	char mtext[25];
+} message_buf;
 
-int promptForFunds(Message* toSend) {
+int promptForFunds(infoTuple* toSend) {
 	int check;
 	printf("Enter the funds for this account: ");
 	check = scanf("%f", &(toSend->funds));
@@ -35,23 +36,7 @@ int promptForFunds(Message* toSend) {
 
 }
 
-float promptForWithdrawAmount() {
-	float withdraw;
-	printf("Enter the amount of money to withdaw: ");
-	scanf("%f", &withdraw);
-	if(withdraw > -1) return withdraw;
-	else return -1;
-}
-
-int promptForFundsOrWithdraw() {
-	printf("Press 1 to display funds or 2 to withdraw funds: ");
-	int choice;
-	scanf("%d", &choice);
-	if(choice == 1) return 1;
-	else if(choice == 2) return 2;
-	else return 0;
-}
-int promptForPIN(Message* toSend) {
+int promptForPIN(infoTuple* toSend) {
 	int check, size;
 	bool valid = true;
 	valid = true;
@@ -69,9 +54,9 @@ int promptForPIN(Message* toSend) {
 		return 1;
 	}
 	return 0;
-
 }
-int promptForAccount(Message* toSend) {
+
+int promptForAccount(infoTuple* toSend) {
 	int check, size;
 	bool valid = true;
 	printf("Please input a valid account number (5 digits) : ");
@@ -91,12 +76,20 @@ int promptForAccount(Message* toSend) {
 }
 
 void *editor(){
-	Message toSend;
+	infoTuple info;
+	message_buf msg;
+	keyID1 = msgget((key_t) 1239, IPC_CREAT | 0600);
 	while(true) {
-		while(promptForAccount(&toSend) != 1);
-		while(promptForPIN(&toSend) != 1);
-		while(promptForFunds(&toSend) != 1);
+		while(promptForAccount(&info) != 1);
+		while(promptForPIN(&info) != 1);
+		while(promptForFunds(&info) != 1);
 		strcpy(toSend.message, "UPDATE DB");
+		msg.mtype = 1;
+		if(msgsnd(keyID1, &msg, 25, 0) == -1){
+			printf("Error");
+		} else {
+			printf("Sent to server");
+		}
 	}
 }
 
