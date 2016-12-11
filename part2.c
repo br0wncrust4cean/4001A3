@@ -207,12 +207,12 @@ int checkForAccount(infoTuple* received, const char* fileName) {
 		if(strcmp(i.accountNo, received->accountNo) == 0 && strcmp(i.PIN, received->PIN) == 0) {
 			strcpy(received->accountNo,i.accountNo);
 			strcpy(received->PIN,i.PIN);
-			received->funds = i.funds;
-printf("THIS IS SERVERS FUNDS: %f", received->funds);			
-rewind(file);
-fclose(file);
-return rowNumber;
+			received->funds = i.funds;		
+			rewind(file);
+			fclose(file);
+			return rowNumber;
  		}
+		
  		rowNumber++;
 		
 	}
@@ -326,10 +326,11 @@ void *ATM(){
 						printf("Account Blocked \n");
 						strcpy(receivedMessage.message, "BLOCKED");
 						messageToString(mbuf.mtext, receivedMessage);
+						mbuf.type = 1;
 						if(msgsnd(keyID1, &mbuf, 25, 0) == -1) {
 							printf("feelsbadd") ;
 						} else {
-							printf("ATM has sent message\n");
+							printf("ATM has sent BLOCKED\n");
 						}
 						
 					}
@@ -452,7 +453,18 @@ void *server(){
 						pthread_mutex_unlock(&notEmpty);
 					} 
 				} else {
-					printf("This is to check foir wrong pins, not handled yet\n");
+					strcpy(receivedMessage.message, "WRONG");
+					messageToString(mbuf.mtext, receivedMessage);
+					printf("Sending this to atm: %s\n", mbuf.mtext);
+					mbuf.mtype = 2;
+					if(msgsnd(keyID1, &mbuf, 25, 0) == -1) {
+						printf("feelsbadd") ;
+					} else {
+						printf("Sever has sent message: OK\n");
+						pthread_cond_broadcast(&condition);
+						pthread_mutex_unlock(&notEmpty);
+					}
+					
 
 				}
 			} else printf("pls not here");
