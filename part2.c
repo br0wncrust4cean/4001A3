@@ -392,7 +392,7 @@ void *server(){
 					sprintf(currMoney, "%.2f", dbRow.funds);
 					FILE* file = fopen("DataBase.txt", "r+");
 					while(fgets(line, sizeof(line), file)){
-						if(rowNumber = iterations){
+						if(rowNumber == iterations){
 							int i;
 							int numOfDigits = checkSizeOfNum(currMoney);
 							char *zeroes = malloc(sizeof(char) * numOfDigits);
