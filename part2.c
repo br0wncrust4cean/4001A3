@@ -306,16 +306,15 @@ void *ATM(){
 								printf("feelsbadd") ;
 							} else {
 								printf("ATM has sent message: WITH\n");
-								pthread_cond_wait(&condition, &notEmpty);
 							}
 							printf("Check if we made it past the conditional wait\n");
 							while(msgrcv(keyID1, &mbuf, 25, 2, 0) == -1) {
 								pthread_cond_wait(&condition, &notEmpty); 			
 							}
-							if(receivedMessage.message[0] == 'N') {
+							if(strcomp(receivedMessage.message, "ENOUGH") = 0) {
 								printf("Not enough funds\n");
 							} 
-						} while(receivedMessage.message[0] == 'N');
+						} while(receivedMessage.message[0] == 'E');
 					 printf("Enough funds available\n");
 					}
 					
@@ -399,47 +398,39 @@ void *server(){
 					sprintf(currMoney, "%.2f", dbRow.funds);
 					FILE* file1 = fopen("DataBase.txt", "r+");
 					while(fgets(line, sizeof(line), file1)){
-						if(rowNumber == -5){
-							int i;
-							int numOfDigits = checkSizeOfNum(currMoney);
-							char *zeroes = malloc(sizeof(char) * numOfDigits);
-							char *zeroesFront = zeroes;
-							printf("zero stuff\n");
-							for (i = 0; i < numOfDigits; i++){
-								printf("bloop\n");
-								zeroes[i] = '0';
-							}
-							zeroes = zeroesFront;
-							printf("%s\n", zeroes);
-							fseek(file1, 10, SEEK_CUR);
-							fputs(zeroes, file1);
-							fseek(file1, -numOfDigits, SEEK_CUR);
-							fputs(update, file1);
-							break;
+					if (rowNumber-1 == iterations){
+						printf("ROWNUMBER/IT: %d, %d", rowNumber, iterations);							
+						int i;
+						int numOfDigits = checkSizeOfNum(currMoney);
+						char *zeroes = malloc(sizeof(char) * numOfDigits);
+						char *zeroesFront = zeroes;
+						printf("zero stuff\n");
+						for (i = 0; i < numOfDigits; i++){
+							printf("bloop\n");
+							zeroes[i] = '0';
 						}
-						 else if (rowNumber-1 == iterations){
-
-							printf("ROWNUMBER/IT: %d, %d", rowNumber, iterations);							
-							int i;
-							int numOfDigits = checkSizeOfNum(currMoney);
-							char *zeroes = malloc(sizeof(char) * numOfDigits);
-							char *zeroesFront = zeroes;
-							printf("zero stuff\n");
-							for (i = 0; i < numOfDigits; i++){
-								printf("bloop\n");
-								zeroes[i] = '0';
-							}
-							zeroes = zeroesFront;
-							printf("%s\n", zeroes);
-							fseek(file1, 10, SEEK_CUR);
-							fputs(zeroes, file1);
-							fseek(file1, -numOfDigits, SEEK_CUR);
-							fputs(update, file1);
-							break;
+						zeroes = zeroesFront;
+						printf("%s\n", zeroes);
+						fseek(file1, 10, SEEK_CUR);
+						fputs(zeroes, file1);
+						fseek(file1, -numOfDigits, SEEK_CUR);
+						fputs(update, file1);
+						break;
 						}
 						iterations++;
 					}
 					fclose(file1);
+					mbuf.mtype = 2;
+					strcpy(receivedMessage.message, "ENOUGH");
+					messageToString(mbuf.mtext, receivedMessage);
+					if(msgsnd(keyID1, &mbuf, 25, 0) == -1) {
+						printf("feelsbadd") ;
+					} else {
+						printf("Sever has sent message ENOUGH: OK\n");
+						pthread_cond_broadcast(&condition);
+						pthread_mutex_unlock(&notEmpty);
+					} 
+					
 			
 				}
 			} else if(strcmp(receivedMessage.message, pinMsg)== 0) {
