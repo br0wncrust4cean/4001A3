@@ -311,7 +311,7 @@ void *ATM(){
 							while(msgrcv(keyID1, &mbuf, 25, 2, 0) == -1) {
 								pthread_cond_wait(&condition, &notEmpty); 			
 							}
-							if(strcomp(receivedMessage.message, "ENOUGH") = 0) {
+							if(strcmp(receivedMessage.message, "ENOUGH")== 0) {
 								printf("Not enough funds\n");
 							} 
 						} while(receivedMessage.message[0] == 'E');
@@ -326,7 +326,7 @@ void *ATM(){
 						printf("Account Blocked \n");
 						strcpy(receivedMessage.message, "BLOCKED");
 						messageToString(mbuf.mtext, receivedMessage);
-						mbuf.type = 1;
+						mbuf.mtype = 1;
 						if(msgsnd(keyID1, &mbuf, 25, 0) == -1) {
 							printf("feelsbadd") ;
 						} else {
