@@ -337,7 +337,9 @@ void *ATM(){
 			} while(okay == false && incorrect != 3); 
 			printf("Enter X to quit or any another key to continue: ");
 			scanf("%s", &cont); 
-		} 
+		}
+	printf("ATM TURNING OFF");
+	pthread_exit(NULL); 
 }
 
 
