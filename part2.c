@@ -388,6 +388,7 @@ void *server(){
 							int i;
 							int numOfDigits = checkSizeOfNum(currMoney);
 							char *zeroes = malloc(sizeof(char) * numOfDigits);
+							char *zeroesFront = zeroes;
 							for (i = 0; i < numOfDigits; i++){
 								zeroes[i] = '0';
 							}
