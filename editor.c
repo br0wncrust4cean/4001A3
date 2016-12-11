@@ -84,10 +84,6 @@ void *editor(){
 		while(promptForPIN(&info) != 1);
 		while(promptForFunds(&info) != 1);
 		sprintf(msg.mtext, "%.5s,%.3s,%0.2f,UPDATE", info.accountNo, info.PIN, info.funds);
-<<<<<<< HEAD
-=======
-		printf("SENDING THIS TO SERVER: %s\n m", msg.mtext);
->>>>>>> 68473223e2133672af6c7752264ff303a61b3e1e
 		msg.mtype = 1;
 		if(msgsnd(keyID1, &msg, 30, 0) == -1){
 			printf("Error");
