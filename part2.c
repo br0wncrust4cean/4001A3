@@ -1,3 +1,8 @@
+/**
+ * Bhavik Tailor 100973983 
+ * Tanzim Zaman 100969782
+ */
+
 #include <stdio.h>
 #include <pthread.h>
 #include <stdlib.h>
@@ -388,7 +393,7 @@ void *server(){
 					const char s[2] = ",";
 					char *currFunds = malloc(sizeof(char) * 10);
 					sprintf(update, "%.2f", money);
-					int iterations = 0, col = 0;
+					int iterations = 0;
 					sprintf(currMoney, "%.2f", dbRow.funds);
 					FILE* file = fopen("DataBase.txt", "r+");
 					while(fgets(line, sizeof(line), file)){

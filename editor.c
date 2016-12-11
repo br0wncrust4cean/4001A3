@@ -90,7 +90,7 @@ int promptForAccount(Message* toSend) {
 	return 0;
 }
 
-void editor(){
+void *editor(){
 	Message toSend;
 	while(true) {
 		while(promptForAccount(&toSend) != 1);
@@ -101,5 +101,9 @@ void editor(){
 }
 
 void main() {
-	editor();
+	pthread_t editorThread;
+	//editor();
+
+	pthread_create(&editorThread, NULL, editor, NULL);
+	pthread_join(editorThread, NULL);
 }
