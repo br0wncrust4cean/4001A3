@@ -395,6 +395,7 @@ void *server(){
 					FILE* file = fopen("DataBase.txt", "r+");
 					while(fgets(line, sizeof(line), file)){
 						if(rowNumber = iterations){
+								printf("YOUR ROW/ITER: %d,%d\n", rowNumber, iterations);
 							int i;
 							int numOfDigits = checkSizeOfNum(currMoney);
 							char *zeroes = malloc(sizeof(char) * numOfDigits);
@@ -418,6 +419,7 @@ void *server(){
 			} else if(strcmp(receivedMessage.message, pinMsg)== 0) {
 
 				if((rowNumber = checkForAccount((&receivedMessage.info), "DataBase.txt")) != -1) {
+					printf("YOUR ROW NUMBER IS: %d\n", rowNumber);
 					strcpy(dbRow.accountNo,receivedMessage.info.accountNo);
 					strcpy(dbRow.PIN,receivedMessage.info.PIN);
 					dbRow.funds = receivedMessage.info.funds;
