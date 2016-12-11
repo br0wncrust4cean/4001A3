@@ -317,8 +317,7 @@ void *ATM(){
 						} while(receivedMessage.message[0] == 'E');
 					 printf("Enough funds available\n");
 					}
-					
-					
+		
 				} else {
 					printf("Im FALSE\n");
 					incorrect++;
@@ -433,6 +432,18 @@ void *server(){
 					} 
 					
 			
+				} else {
+					mbuf.mtype = 2;
+					strcpy(receivedMessage.message, "NOT");
+					messageToString(mbuf.mtext, receivedMessage);
+					if(msgsnd(keyID1, &mbuf, 25, 0) == -1) {
+						printf("feelsbadd") ;
+					} else {
+						printf("Sever has sent message NOT\n");
+						pthread_cond_broadcast(&condition);
+						pthread_mutex_unlock(&notEmpty);
+					} 
+					
 				}
 			} else if(strcmp(receivedMessage.message, pinMsg)== 0) {
 
