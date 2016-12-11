@@ -189,15 +189,13 @@ int checkForAccount(infoTuple* received, const char* fileName) {
 		}
 				//vp = front;
 		token = strtok(values, s);
-		  while( token != NULL )  {
-		printf("THe token is: %s\n", token);	
+		  while( token != NULL )  {	
 				if(colCounter == 0) {
 					strcpy(i.accountNo, token);
 				} else if(colCounter == 1) {
 					strcpy(i.PIN, token);	
 				} else {
 					i.funds = atof(token);
-                                        printf("Token: %s, Funds: %f\n", token, i.funds);
 					colCounter = -1;
 				}
 				colCounter++;
@@ -230,7 +228,6 @@ int checkSizeOfNum(char* num){
 	for(p; *p != '\0'; p++){
 		returnVal++;
 	}
-	printf("****return val: %d\n", returnVal);
 	return returnVal;
 	
 }
@@ -248,7 +245,6 @@ void *ATM(){
 	int choice = 0;
 	bool okay;
 	keyID1 = msgget((key_t) 1239, IPC_CREAT | 0600);
-	//printf("THE ATM ID %d\n", keyID);
 	while(cont != 'x' && cont != 'X') {
 
 		while(promptForAccount(&toSend) != 1); 
@@ -481,7 +477,7 @@ void *server(){
 
 				}
 			} else if(strcmp(receivedMessage.message, "BLOCKED")== 0) {
-				FILE* file2 = fopen("DataBase.txt", "r+")
+				FILE* file2 = fopen("DataBase.txt", "r+");
 				int iterations = 0;
 				while(fgets(line, sizeof(line), file2)){
 					if (rowNumber-1 == iterations){
