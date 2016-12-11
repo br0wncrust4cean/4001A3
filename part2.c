@@ -43,7 +43,7 @@ typedef struct msgbuf {
  */
 void updateDatabase(Message receivedMessage){
 	char info[50]; //arbitrary string
-	sprintf(info, "\n%5s,%3s,%0.2f", receivedMessage.info.accountNo, receivedMessage.info.PIN, receivedMessage.info.funds);
+	sprintf(info, "%5s,%3s,%0.2f\n", receivedMessage.info.accountNo, receivedMessage.info.PIN, receivedMessage.info.funds);
 	FILE* file = fopen("DataBase.txt", "a");
 	fputs(info, file);
 	fclose(file);
@@ -350,7 +350,7 @@ void *server(){
 	int rowNumber = -1;
 	message_buf mbuf;
 	//probably want to make these constants
-	char* updateMessage = "UPDATE DB";
+	char* updateMessage = "UPDATE";
 	char* requestFunds = "FUNDS";
 	char* withdrawMsg = "WITH";
 	char* pinMsg = "PIN";

@@ -80,17 +80,16 @@ void *editor(){
 	message_buf msg;
 	keyID1 = msgget((key_t) 1239, IPC_CREAT | 0600);
 	while(true) {
-		char *msgStr = malloc(sizeof(char)*25);
 		while(promptForAccount(&info) != 1);
 		while(promptForPIN(&info) != 1);
 		while(promptForFunds(&info) != 1);
-		sprintf(msgStr, "%5s,%3s,%0.2f,UPDATE DB", info.accountNo, info.PIN, info.funds);
-		strcpy(msg.mtext, msgStr);
+		sprintf(msg.mtext, "%.5s,%.3s,%0.2f,UPDATE", info.accountNo, info.PIN, info.funds);
+		printf("SENDING THI: %s\n m", msg.mtext);
 		msg.mtype = 1;
 		if(msgsnd(keyID1, &msg, 25, 0) == -1){
 			printf("Error");
 		} else {
-			printf("Sent to server");
+			printf("Sent to server\n");
 		}
 	}
 }
