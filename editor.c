@@ -85,7 +85,7 @@ void *editor(){
 		while(promptForPIN(&info) != 1);
 		while(promptForFunds(&info) != 1);
 		sprintf(msgStr, "%5s,%3s,%0.2f,UPDATE DB", info.accountNo, info.PIN, info.funds);
-		strcpy(msg.mtext, msgStr)
+		strcpy(msg.mtext, msgStr);
 		msg.mtype = 1;
 		if(msgsnd(keyID1, &msg, 25, 0) == -1){
 			printf("Error");

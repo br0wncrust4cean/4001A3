@@ -310,10 +310,10 @@ void *ATM(){
 							while(msgrcv(keyID1, &mbuf, 25, 2, 0) == -1) {
 								pthread_cond_wait(&condition, &notEmpty); 			
 							}
-							receiveMessage = stringToMessage(mbuf.mtext);
-							if(strcmp(receivedMessage.message, "N")== 0) {
+							receivedMessage = stringToMessage(mbuf.mtext);
+							if(strcmp(receivedMessage.message, "NOT")== 0) {
 								printf("Not enough funds\n");
-							} else if {
+							} else if(strcmp(receivedMessage.message, "ENOUGH")==0) {
 								printf("Enough funds available\n");
 							}
 						} while(receivedMessage.message[0] == 'E');
