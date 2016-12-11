@@ -44,7 +44,7 @@ typedef struct msgbuf {
 void updateDatabase(Message receivedMessage){
 	char info[50]; //arbitrary string
 	sprintf(info, "\n%5s,%3s,%0.2f", receivedMessage.info.accountNo, receivedMessage.info.PIN, receivedMessage.info.funds);
-	FILE* file = fopen("DataBase", "a");
+	FILE* file = fopen("DataBase.txt", "a");
 	fputs(info, file);
 	fclose(file);
 }
@@ -297,26 +297,24 @@ void *ATM(){
 						choice = 2; //Needed to move on, hence why its not an if else!
 					}
 					if(choice == 2) {
-						do {
-							while((receivedMessage.info.funds = promptForWithdrawAmount()) == -1){}
-							strcpy(receivedMessage.message, "WITH");
-							mbuf.mtype = 1;
-							messageToString(mbuf.mtext, receivedMessage);
-							if(msgsnd(keyID1, &mbuf,25 , 0) == -1) {
-								printf("feelsbadd") ;
-							} else {
-								printf("ATM has sent message: WITH\n");
-							}
-							while(msgrcv(keyID1, &mbuf, 25, 2, 0) == -1) {
-								pthread_cond_wait(&condition, &notEmpty); 			
-							}
-							receivedMessage = stringToMessage(mbuf.mtext);
-							if(strcmp(receivedMessage.message, "NOT")== 0) {
-								printf("Not enough funds\n");
-							} else if(strcmp(receivedMessage.message, "ENOUGH")==0) {
-								printf("Enough funds available\n");
-							}
-						} while(receivedMessage.message[0] == 'E');
+						while((receivedMessage.info.funds = promptForWithdrawAmount()) == -1){}
+						strcpy(receivedMessage.message, "WITH");
+						mbuf.mtype = 1;
+						messageToString(mbuf.mtext, receivedMessage);
+						if(msgsnd(keyID1, &mbuf,25 , 0) == -1) {
+							printf("feelsbadd") ;
+						} else {
+							printf("ATM has sent message: WITH\n");
+						}
+						while(msgrcv(keyID1, &mbuf, 25, 2, 0) == -1) {
+							pthread_cond_wait(&condition, &notEmpty); 			
+						}
+						receivedMessage = stringToMessage(mbuf.mtext);
+						if(strcmp(receivedMessage.message, "NOT")== 0) {
+							printf("Not enough funds\n");
+						} else if(strcmp(receivedMessage.message, "ENOUGH")==0) {
+							printf("Enough funds available\n");
+						}
 
 					}
 		
@@ -480,7 +478,9 @@ void *server(){
 					
 
 				}
-			} else printf("pls not here");
+			} else if(strcmp(receivedMessage.message, "BLOCKED")== 0) {
+					//if(rowNumber == -1)
+			}
 		} 
 	
 	}
