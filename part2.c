@@ -209,6 +209,7 @@ int checkForAccount(infoTuple* received, const char* fileName) {
 			strcpy(received->PIN,i.PIN);
 			received->funds = i.funds;
 printf("THIS IS SERVERS FUNDS: %f", received->funds);			
+rewind(file);
 fclose(file);
 return rowNumber;
  		}
@@ -396,9 +397,9 @@ void *server(){
 					sprintf(update, "%.2f", money);
 					int iterations = 0;
 					sprintf(currMoney, "%.2f", dbRow.funds);
-					FILE* file = fopen("DataBase.txt", "r+");
-					while(fgets(line, sizeof(line), file)){
-						if(rowNumber == iterations){
+					FILE* file1 = fopen("DataBase.txt", "r+");
+					while(fgets(line, sizeof(line), file1)){
+						if(rowNumber-1 == iterations){
 
 							printf("ROWNUMBER/IT: %d, %d", rowNumber, iterations);							
 							int i;
@@ -412,15 +413,16 @@ void *server(){
 							}
 							zeroes = zeroesFront;
 							printf("%s\n", zeroes);
-							fseek(file, 10, SEEK_CUR);
-							fputs(zeroes, file);
-							fseek(file, -numOfDigits, SEEK_CUR);
-							fputs(update, file);
+							fseek(file1, 10, SEEK_CUR);
+							fputs(zeroes, file1);
+							fseek(file1, -numOfDigits, SEEK_CUR);
+							fputs(update, file1);
+break;
 						}
 						iterations++;
 					}
-					fclose(file);
-					printf("CLOSED FILE");
+					fclose(file1);
+			
 				}
 			} else if(strcmp(receivedMessage.message, pinMsg)== 0) {
 
