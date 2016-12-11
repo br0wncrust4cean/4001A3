@@ -372,7 +372,7 @@ void *server(){
 				printf("Im rfunds: HALLO");
 				messageToString(mbuf.mtext,receivedMessage);
 				mbuf.mtype = 2;
-				if(msgsnd(keyID1, &mbuf, 25, 0) == -1) {
+				if(msgsnd(keyID1, &mbuf, 30, 0) == -1) {
 						printf("feelsbadd") ;
 					} else {
 						printf("Sever has sent message FUNDS: OK\n");
@@ -389,7 +389,7 @@ void *server(){
 					char update[10];
 					char currMoney[10];
 					char line[256];
-					char *values = malloc(sizeof(char) * 25);
+					char *values = malloc(sizeof(char) * 30);
 					char* front = values;
 					const char s[2] = ",";
 					char *currFunds = malloc(sizeof(char) * 10);
@@ -423,7 +423,7 @@ void *server(){
 					mbuf.mtype = 2;
 					strcpy(receivedMessage.message, "ENOUGH");
 					messageToString(mbuf.mtext, receivedMessage);
-					if(msgsnd(keyID1, &mbuf, 25, 0) == -1) {
+					if(msgsnd(keyID1, &mbuf, 30, 0) == -1) {
 						printf("feelsbadd") ;
 					} else {
 						printf("Sever has sent message ENOUGH: OK\n");
@@ -436,7 +436,7 @@ void *server(){
 					mbuf.mtype = 2;
 					strcpy(receivedMessage.message, "NOT");
 					messageToString(mbuf.mtext, receivedMessage);
-					if(msgsnd(keyID1, &mbuf, 25, 0) == -1) {
+					if(msgsnd(keyID1, &mbuf, 30, 0) == -1) {
 						printf("feelsbadd") ;
 					} else {
 						printf("Sever has sent message NOT\n");
@@ -456,7 +456,7 @@ void *server(){
 					messageToString(mbuf.mtext, receivedMessage);
 					printf("Sending this to atm: %s\n", mbuf.mtext);
 					mbuf.mtype = 2;
-					if(msgsnd(keyID1, &mbuf, 25, 0) == -1) {
+					if(msgsnd(keyID1, &mbuf, 30, 0) == -1) {
 						printf("feelsbadd") ;
 					} else {
 						printf("Sever has sent message: OK\n");
@@ -468,7 +468,7 @@ void *server(){
 					messageToString(mbuf.mtext, receivedMessage);
 					printf("Sending this to atm: %s\n", mbuf.mtext);
 					mbuf.mtype = 2;
-					if(msgsnd(keyID1, &mbuf, 25, 0) == -1) {
+					if(msgsnd(keyID1, &mbuf, 30, 0) == -1) {
 						printf("feelsbadd") ;
 					} else {
 						printf("Sever has sent message: OK\n");

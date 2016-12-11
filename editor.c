@@ -24,7 +24,7 @@ typedef struct {
 //message to receive and send messages to the message queue
 typedef struct msgbuf {
 	long mtype;
-	char mtext[25];
+	char mtext[30];
 } message_buf;
 
 int promptForFunds(infoTuple* toSend) {
@@ -86,7 +86,7 @@ void *editor(){
 		sprintf(msg.mtext, "%.5s,%.3s,%0.2f,UPDATE", info.accountNo, info.PIN, info.funds);
 		printf("SENDING THI: %s\n m", msg.mtext);
 		msg.mtype = 1;
-		if(msgsnd(keyID1, &msg, 25, 0) == -1){
+		if(msgsnd(keyID1, &msg, 30, 0) == -1){
 			printf("Error");
 		} else {
 			printf("Sent to server\n");
