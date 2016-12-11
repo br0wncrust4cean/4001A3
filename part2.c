@@ -13,6 +13,7 @@ int keyID1, keyID2;
 pthread_mutex_t  notEmpty;
 pthread_cond_t condition;
 
+//struct to store a row from the database
 typedef struct {
     char accountNo[5];
     float funds;
@@ -20,18 +21,21 @@ typedef struct {
 
 } infoTuple;
 
- 
+//struct to store a message along with a row from the database
 typedef struct {
     char message[9];
     infoTuple info;
 }Message;
 
+//message to receive and send messages to the message queue
 typedef struct msgbuf {
 	long mtype;
 	char mtext[25];
 } message_buf;
 
-
+/**
+ * Adds a row to the table
+ */
 void updateDatabase(Message receivedMessage){
 	char info[50]; //arbitrary string
 	sprintf(info, "\n%5s,%3s,%0.2f", receivedMessage.info.accountNo, receivedMessage.info.PIN, receivedMessage.info.funds);
@@ -40,7 +44,9 @@ void updateDatabase(Message receivedMessage){
 	fclose(file);
 }
 
-
+/**
+ * Prompts for funds and creates a message to send
+ */
 int promptForFunds(Message* toSend) {
 	int check;
 	printf("Enter the funds for this account: ");
@@ -50,14 +56,20 @@ int promptForFunds(Message* toSend) {
 
 }
 
+/**
+ * Prompts for a withdrawal
+ */
 float promptForWithdrawAmount() {
 	float withdraw;
-	printf("Enter the amount of money to withdaw: ");
+	printf("Enter the amount of money to withdraw: ");
 	scanf("%f", &withdraw);
 	if(withdraw > -1) return withdraw;
 	else return -1;
 }
 
+/**
+ * Prompts for either the funds or for withdrawal
+ */
 int promptForFundsOrWithdraw() {
 	printf("Press 1 to display funds or 2 to withdraw funds: ");
 	int choice;
@@ -66,6 +78,10 @@ int promptForFundsOrWithdraw() {
 	else if(choice == 2) return 2;
 	else return 0;
 }
+
+/**
+ * Prompts for the account's pin number. Returns 0 if the PIN is invalid
+ */
 int promptForPIN(Message* toSend) {
 	int check, size;
 	bool valid = true;
@@ -86,6 +102,10 @@ int promptForPIN(Message* toSend) {
 	return 0;
 
 }
+
+/**
+ * Prompts for the account number. Returns 0 if it is invalid.
+ */ 
 int promptForAccount(Message* toSend) {
 	int check, size;
 	bool valid = true;
@@ -105,6 +125,10 @@ int promptForAccount(Message* toSend) {
 	return 0;
 	
 }
+
+/**
+ * Converts Message struct into a string. First param is the string to be store the converted string. 
+ */
 void messageToString(char * toFill, Message toSend) {
 	sprintf(toFill, "%s,%s,%.2f,%s", toSend.info.accountNo, toSend.info.PIN, toSend.info.funds, toSend.message); 
 
@@ -134,6 +158,11 @@ Message stringToMessage(char* filled) {
 	return msg;
 }
 
+/**
+ * checks if the account is in the database. 
+ * returns the rownumber at which the account is in the database
+ * first param is a struct to store the row information
+ */
 int checkForAccount(infoTuple* received, const char* fileName) {
 	FILE* file = fopen(fileName, "r+");
 	int colCounter = 0;
@@ -156,7 +185,7 @@ int checkForAccount(infoTuple* received, const char* fileName) {
 				//vp = front;
 		token = strtok(values, s);
 		  while( token != NULL )  {
-printf("THe token is: %s\n", token);	
+		printf("THe token is: %s\n", token);	
 				if(colCounter == 0) {
 					strcpy(i.accountNo, token);
 				} else if(colCounter == 1) {
@@ -183,7 +212,10 @@ return rowNumber;
 	fclose(file);
 	return -1;
 }
-	
+
+/**
+ * Checks the amount of digits in a number
+ */
 int checkSizeOfNum(char* num){
 	char *p;
 	p=num;
@@ -196,6 +228,9 @@ int checkSizeOfNum(char* num){
 	
 }
 
+/**
+ * The ATM's thread 
+ */
 void *ATM(){
 	Message toSend, receivedMessage;
 	bool received = true;
@@ -239,8 +274,8 @@ void *ATM(){
 					} while(choice == 0);
 					if(choice == 1) {
 						strcpy(receivedMessage.message, "FUNDS");
-messageToString(mbuf.mtext, receivedMessage);						
-mbuf.mtype = 1;
+						messageToString(mbuf.mtext, receivedMessage);						
+						mbuf.mtype = 1;
 						if(msgsnd(keyID1, &mbuf, 25, 0) == -1) {
 							printf("ATM could not send message: Funds \n") ;
 						} else {
@@ -300,7 +335,9 @@ mbuf.mtype = 1;
 }
 
 
-
+/**
+ * THe server's thread 
+ */
 void *server(){
 	Message receivedMessage, toSend;
 	infoTuple dbRow;
@@ -391,8 +428,8 @@ void *server(){
 						pthread_mutex_unlock(&notEmpty);
 					} 
 				} else {
-					
 					printf("This is to check foir wrong pins, not handled yet\n");
+
 				}
 			} else printf("pls not here");
 		} 
