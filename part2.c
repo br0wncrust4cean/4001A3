@@ -414,6 +414,7 @@ void *server(){
 							printf("%s\n", zeroes);
 							fseek(file, 10, SEEK_CUR);
 							fputs(zeroes, file);
+							fseek(file, -numOfDigits, SEEK_CUR);
 							fputs(update, file);
 						}
 						iterations++;
