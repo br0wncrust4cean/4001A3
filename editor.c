@@ -41,8 +41,8 @@ int promptForPIN(infoTuple* toSend) {
 	bool valid = true;
 	valid = true;
 	printf("\nPlease input a valid PIN (3 digits) : ");
-	check = scanf("%s", toSend->info.PIN);
-	char *p = toSend->info.PIN;
+	check = scanf("%s", toSend->PIN);
+	char *p = toSend->PIN;
 	size = 0;
 	for(p; *p != '\0'; p++ ) {
 		if(!isdigit(*p)) {
@@ -60,8 +60,8 @@ int promptForAccount(infoTuple* toSend) {
 	int check, size;
 	bool valid = true;
 	printf("Please input a valid account number (5 digits) : ");
-	check = scanf("%s", toSend->info.accountNo);
-	char *p = toSend->info.accountNo;
+	check = scanf("%s", toSend->accountNo);
+	char *p = toSend->accountNo;
 	size = 0;
 	for(p; *p != '\0'; p++ ) {
 		if(!isdigit(*p)) {
@@ -84,8 +84,8 @@ void *editor(){
 		while(promptForAccount(&info) != 1);
 		while(promptForPIN(&info) != 1);
 		while(promptForFunds(&info) != 1);
-		sprintf(msgStr, "%5s,%3s,%0.2f,UPDATE DB", infoTuple.accountNo, infoTuple.PIN, infoTuple.funds);
-		strcpy(msg.mtext, msgStr);
+		sprintf(msgStr, "%5s,%3s,%0.2f,UPDATE DB", info.accountNo, info.PIN, info.funds);
+		strcpy(msg.mtext, msgStr)
 		msg.mtype = 1;
 		if(msgsnd(keyID1, &msg, 25, 0) == -1){
 			printf("Error");
